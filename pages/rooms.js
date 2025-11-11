@@ -1,6 +1,6 @@
 // pages/rooms.js
 import Link from 'next/link';
-import '../styles/globals.css';
+;
 
 export default function Rooms() {
   return (

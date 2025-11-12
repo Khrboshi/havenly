@@ -1,55 +1,47 @@
-import Link from 'next/link'
-import Header from '../components/Header'
-import Footer from '../components/Footer'
-import { useState } from 'react'
+"use client";
+import Head from "next/head";
+import { useState } from "react";
 
-const prompts = [
-  "Name one thing that keeps circling in your mind.",
-  "What feeling sits beneath that thought?",
-  "If you could tell that feeling one small thing, what would it be?"
-]
+export default function Unpack() {
+  const prompts = [
+    "What moment stood out to you today?",
+    "What did you learn or notice about yourself?",
+    "What would you like to release before tomorrow?"
+  ];
+  const [step, setStep] = useState(0);
+  const [answers, setAnswers] = useState([]);
 
-export default function Unpack(){
-  const [i,setI] = useState(0)
-  const [text,setText] = useState('')
-  const [answers,setAnswers] = useState([])
+  const next = () => {
+    if (step < prompts.length - 1) setStep(step + 1);
+    else alert("Reflection saved locally. Great work!");
+  };
 
-  function next(){
-    if(!text.trim()) return
-    setAnswers(a=>[...a, text.trim()]); setText(''); setI(i+1)
-  }
-
-  if(i >= prompts.length){
-    return (
-      <>
-        <Header/>
-        <main className="container unpack">
-          <h2>Unpack</h2>
-          <div className="result-card">
-            {answers.map((a,idx)=>(<p key={idx}>• {a}</p>))}
-          </div>
-          <p className="muted">This stays private to this session.</p>
-          <div className="row">
-            <Link href="/rooms"><a className="btn-ghost">Back</a></Link>
-          </div>
-        </main>
-        <Footer/>
-      </>
-    )
-  }
+  const handleChange = (e) => {
+    const copy = [...answers];
+    copy[step] = e.target.value;
+    setAnswers(copy);
+  };
 
   return (
     <>
-      <Header/>
-      <main className="container unpack">
-        <h2>{prompts[i]}</h2>
-        <textarea value={text} onChange={e=>setText(e.target.value)} placeholder="Write a few lines..." />
-        <div className="row">
-          <button className="btn-primary" onClick={next} disabled={!text.trim()}>Continue</button>
-          <Link href="/rooms"><a className="btn-ghost">Back to spaces</a></Link>
+      <Head>
+        <title>Unpack — Havenly</title>
+      </Head>
+      <h1 className="text-3xl font-semibold mb-4 text-center">Unpack Your Day</h1>
+      <div className="max-w-xl mx-auto">
+        <p className="text-text-muted mb-4">{prompts[step]}</p>
+        <textarea
+          value={answers[step] || ""}
+          onChange={handleChange}
+          className="w-full p-4 border border-border rounded-xl focus:ring-2 focus:ring-primary outline-none min-h-[120px]"
+          placeholder="Write your thoughts here..."
+        />
+        <div className="text-right mt-4">
+          <button onClick={next} className="btn-primary">
+            {step === prompts.length - 1 ? "Finish" : "Next"}
+          </button>
         </div>
-      </main>
-      <Footer/>
+      </div>
     </>
-  )
+  );
 }

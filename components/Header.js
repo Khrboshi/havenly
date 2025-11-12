@@ -5,7 +5,12 @@ export default function Header() {
     <header className="bg-white border-b border-slate-200 sticky top-0 z-50">
       <div className="max-w-5xl mx-auto px-6 flex items-center justify-between py-4">
         <Link href="/" className="flex items-center gap-2">
-          <img src="/logo.svg" alt="Havenly logo" className="h-8 w-8" />
+          {/* 👇 updated path */}
+          <img
+            src="/assets/logo.png"
+            alt="Havenly logo"
+            className="h-8 w-8"
+          />
           <span className="text-lg font-semibold text-slate-800">Havenly</span>
         </Link>
         <nav className="flex gap-6 text-slate-600 text-sm sm:text-base">

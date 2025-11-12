@@ -2,17 +2,19 @@ import Link from "next/link";
 
 export default function Header() {
   return (
-    <header className="w-full flex flex-col sm:flex-row items-center justify-between px-6 py-4 bg-gray-900 text-white shadow">
-      <div className="flex items-center space-x-3">
-        <img src="/logo.svg" alt="Havenly Logo" className="h-8 w-auto" />
-        <span className="text-xl font-semibold">Havenly</span>
+    <header className="bg-surface shadow-soft sticky top-0 z-40">
+      <div className="container flex items-center justify-between py-4">
+        <Link href="/" className="flex items-center gap-2">
+          <img src="/logo.png" alt="Havenly logo" className="h-8 w-8" />
+          <span className="text-lg font-semibold">Havenly</span>
+        </Link>
+        <nav className="flex gap-6 text-text-muted">
+          <Link href="/rooms" className="hover:text-primary">Spaces</Link>
+          <Link href="/community" className="hover:text-primary">Community</Link>
+          <Link href="/premium" className="hover:text-primary">Premium</Link>
+          <Link href="/privacy" className="hover:text-primary">Privacy</Link>
+        </nav>
       </div>
-      <nav className="flex space-x-6 mt-2 sm:mt-0">
-        <Link href="/" className="hover:text-blue-400 transition">Home</Link>
-        <Link href="/about" className="hover:text-blue-400 transition">About</Link>
-        <Link href="/community" className="hover:text-blue-400 transition">Community</Link>
-        <Link href="/premium" className="hover:text-blue-400 transition">Premium</Link>
-      </nav>
     </header>
   );
 }

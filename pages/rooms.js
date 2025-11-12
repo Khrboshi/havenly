@@ -1,40 +1,33 @@
-// pages/rooms.js
-import Link from 'next/link';
-;
+import Link from 'next/link'
+import Header from '../components/Header'
+import Footer from '../components/Footer'
 
-export default function Rooms() {
+export default function Rooms(){
   return (
-    <div style={{
-      maxWidth: "700px",
-      margin: "0 auto",
-      padding: "80px 24px",
-      textAlign: "center"
-    }}>
-      <h1 style={{ fontSize: "2rem", marginBottom: "1rem", fontWeight: 400 }}>Choose a space</h1>
-      <p style={{ marginBottom: "3rem", color: "#555" }}>How are you arriving today?</p>
+    <>
+      <Header/>
+      <main className="container rooms">
+        <h2>Choose a space</h2>
+        <p className="muted">Select the place that fits how you feel right now.</p>
 
-      <div style={{
-        display: "grid",
-        gap: "1.5rem",
-        gridTemplateColumns: "1fr",
-      }}>
-        <Link href="/reset"><a style={card}><h2 style={cardTitle}>Reset</h2><p style={cardText}>If things feel heavy or fast.</p></a></Link>
-        <Link href="/unpack"><a style={card}><h2 style={cardTitle}>Unpack</h2><p style={cardText}>If your mind is full and needs room.</p></a></Link>
-        <Link href="/encourage"><a style={card}><h2 style={cardTitle}>Encourage</h2><p style={cardText}>If you need a gentle reminder of your strength.</p></a></Link>
-      </div>
-    </div>
-  );
+        <div className="cards">
+          <Link href="/reset"><a className="card">
+            <h3>Reset</h3>
+            <p>Short breathing pause to steady the body.</p>
+          </a></Link>
+
+          <Link href="/unpack"><a className="card">
+            <h3>Unpack</h3>
+            <p>Three prompts to gently clear what’s in your head.</p>
+          </a></Link>
+
+          <Link href="/encourage"><a className="card">
+            <h3>Encourage</h3>
+            <p>Small reminders and soft encouragements.</p>
+          </a></Link>
+        </div>
+      </main>
+      <Footer/>
+    </>
+  )
 }
-
-const card = {
-  padding: "24px",
-  borderRadius: "12px",
-  background: "#fff",
-  border: "1px solid #ddd",
-  textDecoration: "none",
-  color: "#111",
-  transition: "0.2s",
-  cursor: "pointer"
-};
-const cardTitle = { marginBottom: "0.5rem", fontWeight: 500 };
-const cardText = { color: "#555" };

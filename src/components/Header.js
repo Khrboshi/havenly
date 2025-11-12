@@ -1,17 +1,13 @@
-import Link from 'next/link'
-
 export default function Header() {
   return (
-    <header className="site-header">
-      <div className="inner">
-        <Link href="/"><a className="brand">Havenly</a></Link>
-        <nav>
-          <Link href="/reflect"><a>Reflect</a></Link>
-          <Link href="/community"><a>Community</a></Link>
-          <Link href="/premium"><a>Premium</a></Link>
-          <Link href="/about"><a>About</a></Link>
-        </nav>
-      </div>
+    <header style={{ padding: '20px', backgroundColor: '#111', color: '#fff' }}>
+      <h1>AI Innovation Hub</h1>
+      <nav>
+        <a href="/" style={{ marginRight: '15px' }}>Home</a>
+        <a href="/about" style={{ marginRight: '15px' }}>About</a>
+        <a href="/community" style={{ marginRight: '15px' }}>Community</a>
+        <a href="/dashboard">Dashboard</a>
+      </nav>
     </header>
-  )
+  );
 }

@@ -1,15 +1,17 @@
 import Link from "next/link";
+import Image from "next/image";
 
 export default function Header() {
   return (
     <header className="bg-white border-b border-slate-200 sticky top-0 z-50">
       <div className="max-w-5xl mx-auto px-6 flex items-center justify-between py-4">
         <Link href="/" className="flex items-center gap-2">
-          {/* 👇 updated path */}
-          <img
-            src="/assets/logo.png"
+          <Image
+            src="/logo.png"
             alt="Havenly logo"
-            className="h-8 w-8"
+            width={32}
+            height={32}
+            priority
           />
           <span className="text-lg font-semibold text-slate-800">Havenly</span>
         </Link>

@@ -1,14 +1,7 @@
-export default function Footer(){
+export default function Footer() {
   return (
-    <footer className="site-footer">
-      <div className="inner">
-        <small>Built for stillness in a noisy world — Havenly</small>
-        <div className="links">
-          <a href="/about">About</a>
-          <a href="/privacy">Privacy</a>
-          <a href="/contact">Contact</a>
-        </div>
-      </div>
+    <footer style={{ padding: '20px', backgroundColor: '#111', color: '#fff', textAlign: 'center' }}>
+      <p>&copy; {new Date().getFullYear()} AI Innovation Hub. All rights reserved.</p>
     </footer>
-  )
+  );
 }

@@ -1,4 +1,3 @@
-// /components/OnboardingModal.jsx
 import { useState } from "react";
 import { motion } from "framer-motion";
 
@@ -15,7 +14,8 @@ export default function OnboardingModal({ onFinish }) {
   return (
     <motion.div
       className="fixed inset-0 bg-black/60 flex items-center justify-center z-50"
-      initial={{ opacity: 0 }} animate={{ opacity: 1 }}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
     >
       <div className="bg-white rounded-2xl shadow-xl p-8 max-w-md text-center">
         <h2 className="text-2xl font-semibold mb-4">{steps[index].title}</h2>

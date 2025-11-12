@@ -6,7 +6,6 @@ export default function Header() {
         <a href="/" style={{ marginRight: '15px' }}>Home</a>
         <a href="/about" style={{ marginRight: '15px' }}>About</a>
         <a href="/community" style={{ marginRight: '15px' }}>Community</a>
-        <a href="/dashboard">Dashboard</a>
       </nav>
     </header>
   );

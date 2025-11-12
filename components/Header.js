@@ -1,18 +1,25 @@
 import Link from "next/link";
+import Image from "next/image";
 
 export default function Header() {
   return (
-    <header className="bg-surface shadow-soft sticky top-0 z-40">
+    <header className="bg-white shadow-sm sticky top-0 z-50 border-b border-slate-200">
       <div className="container flex items-center justify-between py-4">
         <Link href="/" className="flex items-center gap-2">
-          <img src="/logo.png" alt="Havenly logo" className="h-8 w-8" />
-          <span className="text-lg font-semibold">Havenly</span>
+          <Image
+            src="/logo.svg"
+            alt="Havenly logo"
+            width={32}
+            height={32}
+            priority
+          />
+          <span className="text-xl font-semibold text-slate-800">Havenly</span>
         </Link>
-        <nav className="flex gap-6 text-text-muted">
-          <Link href="/rooms" className="hover:text-primary">Spaces</Link>
-          <Link href="/community" className="hover:text-primary">Community</Link>
-          <Link href="/premium" className="hover:text-primary">Premium</Link>
-          <Link href="/privacy" className="hover:text-primary">Privacy</Link>
+        <nav className="flex gap-6 text-slate-600 text-sm sm:text-base">
+          <Link href="/rooms" className="hover:text-blue-600 transition">Spaces</Link>
+          <Link href="/community" className="hover:text-blue-600 transition">Community</Link>
+          <Link href="/premium" className="hover:text-blue-600 transition">Premium</Link>
+          <Link href="/privacy" className="hover:text-blue-600 transition">Privacy</Link>
         </nav>
       </div>
     </header>

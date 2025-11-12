@@ -1,9 +1,7 @@
-/* Tailwind core layers */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* Global styles */
 body {
   @apply bg-slate-50 text-slate-800 font-sans;
 }
@@ -12,7 +10,6 @@ body {
   @apply max-w-5xl mx-auto px-6;
 }
 
-/* UI refinements */
 button,
 .btn-primary,
 .btn-ghost {

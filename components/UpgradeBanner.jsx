@@ -1,20 +1,13 @@
-import React from "react";
-import { isPremium, upgrade } from "@/utils/premium";
+import Link from "next/link";
 
 export default function UpgradeBanner() {
-  if (typeof window !== "undefined" && isPremium()) return null;
-
   return (
-    <div className="bg-yellow-100 border border-yellow-300 text-yellow-800 p-4 rounded-lg text-center mt-8 max-w-lg mx-auto">
-      <p className="mb-2 font-medium">
-        Upgrade to Havenly Premium for advanced reflection themes and additional features.
+    <div className="bg-blue-50 border border-blue-200 text-blue-800 p-6 rounded-xl text-center mt-8">
+      <h3 className="font-semibold text-lg mb-2">Go Premium</h3>
+      <p className="text-sm mb-4 text-text-muted">
+        Unlock deeper reflection themes and support Havenly.
       </p>
-      <button
-        onClick={upgrade}
-        className="px-5 py-2 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 transition"
-      >
-        Go Premium
-      </button>
+      <Link href="/premium" className="btn-primary">Upgrade</Link>
     </div>
   );
 }

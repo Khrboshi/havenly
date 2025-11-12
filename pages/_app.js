@@ -8,9 +8,11 @@ export default function MyApp({ Component, pageProps }) {
     <>
       <Head>
         <title>Havenly — A quiet place to check in with yourself</title>
-        <meta name="description" content="Private mindful reflections to help you slow down and reconnect with yourself." />
-        <link rel="icon" href="/logo.svg" />
-        <link rel="apple-touch-icon" href="/logo.svg" />
+        <meta
+          name="description"
+          content="Private mindful reflections to help you slow down and reconnect with yourself."
+        />
+        <link rel="icon" href="/logo.png" />
       </Head>
       <div className="min-h-screen flex flex-col bg-slate-50 text-slate-800">
         <Header />

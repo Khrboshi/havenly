@@ -1,30 +1,28 @@
-import Header from '../components/Header'
-import Footer from '../components/Footer'
-import Link from 'next/link'
+import Head from "next/head";
 
-export default function Community(){
-  // placeholder public feed — no user data collection here
-  const samples = [
-    "A 2-line note: Today I paused and that helped.",
-    "Tiny: I noticed the coffee tasted better this morning.",
-    "I let one thing go today and slept better."
-  ]
+export default function Community() {
+  const posts = [
+    { id: 1, text: "I took 10 minutes to breathe today — it really helped." },
+    { id: 2, text: "Learning to pause before reacting changed my week." },
+    { id: 3, text: "I finally wrote down my goals again after a hard season." },
+  ];
 
   return (
     <>
-      <Header/>
-      <main className="container community">
-        <h2>Community</h2>
-        <p className="muted">A few anonymous moments shared by early members.</p>
-        <div className="feed">
-          {samples.map((s,i)=>(<div className="feed-item" key={i}>{s}</div>))}
-        </div>
-        <p className="muted">When you’re ready, you can share anonymously from your session.</p>
-        <div className="row">
-          <Link href="/rooms"><a className="btn-ghost">Back to spaces</a></Link>
-        </div>
-      </main>
-      <Footer/>
+      <Head>
+        <title>Community — Havenly</title>
+      </Head>
+      <h1 className="text-3xl font-semibold mb-8 text-center">Community Reflections</h1>
+      <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        {posts.map((p) => (
+          <div
+            key={p.id}
+            className="bg-white border border-border rounded-2xl shadow-soft p-6 hover:shadow-md transition"
+          >
+            <p className="text-text-muted italic">“{p.text}”</p>
+          </div>
+        ))}
+      </div>
     </>
-  )
+  );
 }

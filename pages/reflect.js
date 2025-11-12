@@ -1,95 +1,63 @@
-import { useState } from "react";
+import { useState } from 'react'
+import Header from '../components/Header'
+import Footer from '../components/Footer'
+import Link from 'next/link'
 
-const questions = [
+const prompts = [
   "How are you feeling right now?",
-  "What's taking up space in your mind?",
-  "If there was one thing you could let go of today, what would it be?",
-  "What is one small thing you can do to support yourself in the next few hours?"
-];
+  "What is taking up space in your mind?",
+  "What is one small thing that might help today?"
+]
 
-export default function Reflect() {
-  const [step, setStep] = useState(0);
-  const [answer, setAnswer] = useState("");
-  const [reflection, setReflection] = useState([]);
+export default function Reflect(){
+  const [index,setIndex] = useState(0)
+  const [text,setText] = useState('')
+  const [notes,setNotes] = useState([])
 
-  function handleNext() {
-    setReflection([...reflection, answer]);
-    setAnswer("");
-    setStep(step + 1);
+  function next(){
+    if(!text.trim()) return
+    setNotes(prev=>[...prev, text.trim()])
+    setText('')
+    setIndex(i=>i+1)
   }
 
-  if (step >= questions.length) {
+  function restart(){
+    setIndex(0); setText(''); setNotes([])
+  }
+
+  if(index >= prompts.length){
     return (
-      <div style={container}>
-        <h2>Your reflection</h2>
-        <div style={noteBox}>
-          {reflection.map((line, i) => (
-            <p key={i} style={{ marginBottom: "1rem" }}>{line}</p>
-          ))}
-        </div>
-        <p style={{ color: "#666", marginTop: "2rem" }}>
-          This stays with you. It’s not stored anywhere.
-        </p>
-      </div>
-    );
+      <>
+        <Header/>
+        <main className="container reflect-end">
+          <h2>You're done — thank you for being here.</h2>
+          <div className="result-card">
+            {notes.map((n,i)=>(<p key={i}>• {n}</p>))}
+          </div>
+          <p className="muted">This reflection is private and was not saved.</p>
+          <div className="row">
+            <Link href="/rooms"><a className="btn-ghost">Back to Spaces</a></Link>
+            <button className="btn-primary" onClick={restart}>Do another</button>
+          </div>
+        </main>
+        <Footer/>
+      </>
+    )
   }
 
   return (
-    <div style={container}>
-      <h2 style={{ marginBottom: "1.5rem", fontWeight: 400 }}>
-        {questions[step]}
-      </h2>
-
-      <textarea
-        value={answer}
-        onChange={(e) => setAnswer(e.target.value)}
-        placeholder="Write what comes up, even if it's messy."
-        style={textarea}
-      />
-
-      <button onClick={handleNext} style={button} disabled={!answer.trim()}>
-        Continue
-      </button>
-    </div>
-  );
+    <>
+      <Header/>
+      <main className="container reflect">
+        <h2>{prompts[index]}</h2>
+        <textarea value={text} onChange={e=>setText(e.target.value)} placeholder="Write what comes up…"/>
+        <div className="row">
+          <button className="btn-primary" onClick={next} disabled={!text.trim()}>Continue</button>
+          <Link href="/rooms"><a className="btn-ghost">Choose a different space</a></Link>
+        </div>
+        <p className="muted">Your words stay with you — we do not store them.</p>
+      </main>
+      <Footer/>
+    </>
+  )
 }
-
-const container = {
-  minHeight: "100vh",
-  display: "flex",
-  flexDirection: "column",
-  justifyContent: "center",
-  alignItems: "center",
-  padding: "0 20px",
-  textAlign: "center"
-};
-
-const textarea = {
-  width: "100%",
-  maxWidth: "420px",
-  height: "140px",
-  padding: "12px",
-  borderRadius: "8px",
-  border: "1px solid #bbb",
-  resize: "none",
-  fontSize: "1rem",
-  marginBottom: "1.5rem"
-};
-
-const button = {
-  padding: "12px 32px",
-  borderRadius: "8px",
-  border: "1px solid #111",
-  background: "#fff",
-  cursor: "pointer",
-  fontSize: "1rem"
-};
-
-const noteBox = {
-  background: "#fafafa",
-  border: "1px solid #ddd",
-  borderRadius: "8px",
-  padding: "20px",
-  maxWidth: "420px",
-  textAlign: "left"
-};

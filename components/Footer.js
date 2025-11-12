@@ -1,9 +1,9 @@
 export default function Footer() {
   return (
-    <footer className="w-full py-6 bg-gray-900 text-gray-200 text-center">
-      <p className="text-sm tracking-wide">
-        © {new Date().getFullYear()} Havenly. All rights reserved.
-      </p>
+    <footer className="bg-surface border-t border-border py-6 mt-16">
+      <div className="container text-center text-text-muted text-sm">
+        © {new Date().getFullYear()} Havenly — A quiet place to check in with yourself.
+      </div>
     </footer>
   );
 }

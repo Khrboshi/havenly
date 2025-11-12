@@ -1,23 +1,16 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
-html, body {
-  @apply bg-background text-text font-sans;
+/* UI refinements */
+body {
+  @apply bg-slate-50 text-slate-800;
 }
 
-h1,h2,h3,h4,h5,h6 {
-  @apply text-text font-semibold;
+a {
+  @apply transition-colors;
 }
 
 .container {
   @apply max-w-5xl mx-auto px-6;
 }
 
-.btn-primary {
-  @apply inline-block px-6 py-2 rounded-xl bg-primary text-white font-medium hover:bg-primary-dark transition;
-}
-
-.btn-ghost {
-  @apply inline-block px-6 py-2 rounded-xl border border-border text-text hover:bg-slate-100 transition;
+button, .btn-primary, .btn-ghost {
+  @apply focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2;
 }

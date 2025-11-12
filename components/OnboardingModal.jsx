@@ -1,10 +1,11 @@
+"use client";
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
 const steps = [
-  { title: "Welcome to Havenly", text: "Let's help you create your first reflection." },
-  { title: "Daily Reflections", text: "Answer a mindful question each day to track your growth." },
-  { title: "Privacy First", text: "All data stays in your browser—nothing is uploaded." },
+  { title: "Welcome to Havenly", text: "Let's help you start your reflection journey." },
+  { title: "Daily Reflections", text: "Answer one question each day to track growth." },
+  { title: "Private & Secure", text: "Everything stays safely in your browser." }
 ];
 
 export default function OnboardingModal({ onFinish }) {
@@ -15,12 +16,15 @@ export default function OnboardingModal({ onFinish }) {
     return () => (document.body.style.overflow = "auto");
   }, []);
 
-  const next = () => (index < steps.length - 1 ? setIndex(index + 1) : onFinish());
+  const next = () => {
+    if (index < steps.length - 1) setIndex(index + 1);
+    else onFinish();
+  };
 
   return (
     <AnimatePresence>
       <motion.div
-        key="onboard"
+        key="overlay"
         className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
@@ -29,16 +33,16 @@ export default function OnboardingModal({ onFinish }) {
       >
         <motion.div
           onClick={(e) => e.stopPropagation()}
-          className="bg-white rounded-2xl shadow-xl p-8 max-w-md text-center relative"
+          className="bg-white rounded-2xl shadow-2xl p-8 max-w-md text-center"
           initial={{ scale: 0.9, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           exit={{ scale: 0.9, opacity: 0 }}
         >
           <h2 className="text-2xl font-semibold mb-4">{steps[index].title}</h2>
-          <p className="mb-6 text-gray-700">{steps[index].text}</p>
+          <p className="text-text-muted mb-6">{steps[index].text}</p>
           <button
             onClick={next}
-            className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
+            className="btn-primary w-full"
           >
             {index === steps.length - 1 ? "Start Exploring" : "Next"}
           </button>

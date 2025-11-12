@@ -1,33 +1,31 @@
-import Link from 'next/link'
-import Header from '../components/Header'
-import Footer from '../components/Footer'
+import Head from "next/head";
+import Link from "next/link";
 
-export default function Rooms(){
+export default function Rooms() {
+  const rooms = [
+    { title: "Reset", desc: "Short breathing pause to calm the mind.", path: "/reset" },
+    { title: "Unpack", desc: "Reflect and process daily experiences.", path: "/unpack" },
+    { title: "Encourage", desc: "Read and share uplifting thoughts.", path: "/encourage" },
+  ];
+
   return (
     <>
-      <Header/>
-      <main className="container rooms">
-        <h2>Choose a space</h2>
-        <p className="muted">Select the place that fits how you feel right now.</p>
-
-        <div className="cards">
-          <Link href="/reset"><a className="card">
-            <h3>Reset</h3>
-            <p>Short breathing pause to steady the body.</p>
-          </a></Link>
-
-          <Link href="/unpack"><a className="card">
-            <h3>Unpack</h3>
-            <p>Three prompts to gently clear what’s in your head.</p>
-          </a></Link>
-
-          <Link href="/encourage"><a className="card">
-            <h3>Encourage</h3>
-            <p>Small reminders and soft encouragements.</p>
-          </a></Link>
-        </div>
-      </main>
-      <Footer/>
+      <Head>
+        <title>Havenly — Spaces</title>
+      </Head>
+      <h1 className="text-3xl font-semibold mb-8 text-center">Your Reflection Spaces</h1>
+      <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        {rooms.map((r) => (
+          <Link
+            key={r.path}
+            href={r.path}
+            className="bg-white border border-border p-6 rounded-2xl shadow-soft hover:shadow-md transition"
+          >
+            <h3 className="text-xl font-semibold mb-2">{r.title}</h3>
+            <p className="text-text-muted text-sm">{r.desc}</p>
+          </Link>
+        ))}
+      </div>
     </>
-  )
+  );
 }

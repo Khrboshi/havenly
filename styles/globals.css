@@ -1,18 +1,18 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-/* UI refinements */
-body {
-  @apply bg-slate-50 text-slate-800;
-}
 
-a {
-  @apply transition-colors;
+body {
+  @apply bg-slate-50 text-slate-800 font-sans;
 }
 
 .container {
   @apply max-w-5xl mx-auto px-6;
 }
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+/* UI refinements */
 
 button, .btn-primary, .btn-ghost {
   @apply focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2;

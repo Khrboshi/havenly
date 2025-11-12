@@ -1,7 +1,9 @@
 export default function Footer() {
   return (
-    <footer style={{ padding: '20px', backgroundColor: '#111', color: '#fff', textAlign: 'center' }}>
-      <p>&copy; {new Date().getFullYear()} Havenly. All rights reserved.</p>
+    <footer className="w-full py-6 bg-gray-900 text-gray-200 text-center">
+      <p className="text-sm tracking-wide">
+        © {new Date().getFullYear()} Havenly. All rights reserved.
+      </p>
     </footer>
   );
 }

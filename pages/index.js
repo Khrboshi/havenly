@@ -24,21 +24,50 @@ export default function Home() {
   return (
     <>
       <Head>
-        <title>Havenly — Home</title>
+        <title>Havenly — Mindful Reflections</title>
+        <meta
+          name="description"
+          content="Havenly helps you slow down, reflect, and rediscover calm through guided prompts and daily reflections — private, secure, and beautifully simple."
+        />
       </Head>
-      <section className="text-center py-20">
-        <h1 className="text-5xl font-bold mb-4">Welcome to Havenly</h1>
-        <p className="text-text-muted max-w-xl mx-auto mb-6">
-          Your private space for daily mindfulness and gentle reflection.
+
+      {/* Hero Section */}
+      <section className="relative py-24 text-center overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-b from-blue-50 to-white opacity-70 -z-10" />
+
+        <h1 className="text-5xl sm:text-6xl font-extrabold text-slate-800 mb-6 leading-tight">
+          A Quiet Space for <span className="text-blue-600">Mindful Reflection</span>
+        </h1>
+
+        <p className="text-lg sm:text-xl text-slate-600 max-w-2xl mx-auto mb-10">
+          Havenly helps you slow down, reflect, and rediscover calm through guided prompts and daily reflections — private, secure, and beautifully simple.
         </p>
-        <Link href="/rooms" className="btn-primary">
-          Start My Reflection
-        </Link>
+
+        <div className="flex flex-col sm:flex-row justify-center gap-4">
+          <Link
+            href="/rooms"
+            className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-full font-semibold shadow-md transition"
+          >
+            Start My Reflection
+          </Link>
+          <Link
+            href="/premium"
+            className="border border-blue-600 text-blue-600 hover:bg-blue-50 px-8 py-3 rounded-full font-semibold transition"
+          >
+            Explore Premium
+          </Link>
+        </div>
+
+        <div className="mt-16 text-slate-500 text-sm">
+          No sign-ups. No distractions. Just space to breathe.
+        </div>
       </section>
 
+      {/* Optional banners below hero */}
       <ReferralBanner />
       <UpgradeBanner />
 
+      {/* Onboarding modal */}
       {showOnboard && <OnboardingModal onFinish={finishOnboard} />}
     </>
   );

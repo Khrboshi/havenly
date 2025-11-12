@@ -1,31 +1,45 @@
-import Link from 'next/link'
-import Header from '../components/Header'
-import Footer from '../components/Footer'
-import { useState } from 'react'
+"use client";
+import Head from "next/head";
+import { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 
-const lines = [
-  "You’ve made it this far. That matters.",
-  "Small steps are still steps.",
-  "Rest is productive. Give yourself permission.",
-  "You are allowed to be imperfect and still whole."
-]
+const quotes = [
+  "You’re doing better than you think.",
+  "Small steps still move you forward.",
+  "Rest is productive too.",
+  "Progress, not perfection."
+];
 
-export default function Encourage(){
-  const [i,setI] = useState(0)
+export default function Encourage() {
+  const [index, setIndex] = useState(0);
+
+  useEffect(() => {
+    const timer = setInterval(
+      () => setIndex((i) => (i + 1) % quotes.length),
+      4000
+    );
+    return () => clearInterval(timer);
+  }, []);
+
   return (
     <>
-      <Header/>
-      <main className="container encourage">
-        <h2>Encourage</h2>
-        <div className="result-card">
-          <p>{lines[i]}</p>
-        </div>
-        <div className="row">
-          <button className="btn-primary" onClick={()=> setI((i+1)%lines.length)}>Another</button>
-          <Link href="/rooms"><a className="btn-ghost">Back</a></Link>
-        </div>
-      </main>
-      <Footer/>
+      <Head>
+        <title>Encourage — Havenly</title>
+      </Head>
+      <div className="flex flex-col items-center justify-center min-h-[60vh] text-center">
+        <AnimatePresence mode="wait">
+          <motion.p
+            key={index}
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            transition={{ duration: 0.5 }}
+            className="text-2xl text-text-muted max-w-xl"
+          >
+            “{quotes[index]}”
+          </motion.p>
+        </AnimatePresence>
+      </div>
     </>
-  )
+  );
 }

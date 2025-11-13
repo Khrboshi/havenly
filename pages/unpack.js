@@ -3,17 +3,19 @@
 import { useState, useEffect } from "react";
 import Head from "next/head";
 import { motion } from "framer-motion";
+import MoodTracker from "@/components/MoodTracker";
 import { logEvent } from "@/utils/analytics";
 
 export default function Unpack() {
   const prompts = [
     "What moment stood out to you today?",
     "What did you learn or notice about yourself?",
-    "What would you like to release before tomorrow?"
+    "What would you like to release before tomorrow?",
   ];
 
   const [step, setStep] = useState(0);
   const [answers, setAnswers] = useState([]);
+  const [mood, setMood] = useState(null);
 
   useEffect(() => {
     logEvent("unpack_page_view");
@@ -34,16 +36,22 @@ export default function Unpack() {
       const entry = {
         text: answers.join("\n\n"),
         date: new Date().toISOString(),
+        mood: mood?.label || "Unknown",
       };
 
       const stored = JSON.parse(localStorage.getItem("reflections") || "[]");
       localStorage.setItem("reflections", JSON.stringify([...stored, entry]));
 
-      logEvent("reflection_saved", { words: entry.text.split(" ").length });
+      logEvent("reflection_saved", {
+        words: entry.text.split(" ").length,
+        mood: entry.mood,
+      });
+
       alert("Reflection saved locally. Great work!");
 
       setStep(0);
       setAnswers([]);
+      setMood(null);
     }
   };
 
@@ -67,6 +75,9 @@ export default function Unpack() {
           Unpack Your Day
         </h1>
 
+        {/* ✅ MoodTracker appears first */}
+        <MoodTracker onSelect={(m) => setMood(m)} />
+
         <div className="bg-white/80 backdrop-blur border border-slate-200 rounded-2xl shadow-sm p-6">
           <motion.p
             key={step}
@@ -86,17 +97,14 @@ export default function Unpack() {
           />
 
           <div className="flex justify-end">
-            <button
-              onClick={next}
-              className="btn-primary"
-            >
+            <button onClick={next} className="btn-primary">
               {step === prompts.length - 1 ? "Finish" : "Next"}
             </button>
           </div>
         </div>
 
         <p className="text-center text-slate-500 text-sm mt-8">
-          Your reflections are saved privately in your browser — only you can view them.
+          Your reflections and moods are saved privately in your browser — only you can view them.
         </p>
       </motion.main>
     </>

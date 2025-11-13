@@ -1,6 +1,8 @@
 // /utils/analytics.js
-// Lightweight, privacy-friendly analytics utility for Havenly
-// Works offline and supports optional external integrations
+// --------------------------------------------------
+// Lightweight, privacy-friendly analytics for Havenly
+// Works entirely client-side with optional remote hook
+// --------------------------------------------------
 
 let sessionId = null;
 
@@ -10,31 +12,34 @@ function generateSessionId() {
 }
 
 /** Initialize analytics on client load */
-export function initAnalytics() {
-  if (typeof window === "undefined") return;
+export function getAnalytics() {
+  if (typeof window === "undefined") return null;
   if (!sessionId) sessionId = generateSessionId();
 
-  // Keep session across reloads for 30 min idle timeout
+  // Maintain persistent session (30 min idle timeout logic simplified)
   const stored = localStorage.getItem("havenly_session");
   if (!stored) {
-    localStorage.setItem(
-      "havenly_session",
-      JSON.stringify({ id: sessionId, startedAt: new Date().toISOString() })
-    );
+    const session = { id: sessionId, startedAt: new Date().toISOString() };
+    localStorage.setItem("havenly_session", JSON.stringify(session));
+    if (process.env.NODE_ENV === "development") {
+      console.info("📊 Analytics session initialized:", session);
+    }
   } else {
     const parsed = JSON.parse(stored);
     sessionId = parsed.id || generateSessionId();
   }
+
+  return sessionId;
 }
 
 /**
  * Log an event locally (and optionally send to external analytics)
  * @param {string} eventName  – e.g. "reflection_saved"
- * @param {object} [data={}]  – any contextual properties
+ * @param {object} [data={}]  – contextual metadata
  */
 export function logEvent(eventName, data = {}) {
   if (typeof window === "undefined") return;
-  if (!sessionId) initAnalytics();
+  if (!sessionId) getAnalytics();
 
   const event = {
     id: Math.random().toString(36).substring(2, 9),
@@ -49,7 +54,7 @@ export function logEvent(eventName, data = {}) {
   existing.push(event);
   localStorage.setItem("havenly_events", JSON.stringify(existing));
 
-  // --- Optional external send (future GA/Fathom/Umami hook) ---
+  // --- Optional external send (future integration) ---
   // if (process.env.NEXT_PUBLIC_ANALYTICS_ENDPOINT) {
   //   fetch(process.env.NEXT_PUBLIC_ANALYTICS_ENDPOINT, {
   //     method: "POST",
@@ -59,14 +64,17 @@ export function logEvent(eventName, data = {}) {
   // }
 
   if (process.env.NODE_ENV === "development") {
-    console.info("📊 Event logged:", event);
+    console.info("📈 Event logged:", event);
   }
 }
 
-/** Clear stored analytics (for debugging / reset) */
+/** Clear stored analytics data (for debugging / user reset) */
 export function clearAnalytics() {
   if (typeof window === "undefined") return;
   localStorage.removeItem("havenly_events");
   localStorage.removeItem("havenly_session");
   sessionId = null;
+  if (process.env.NODE_ENV === "development") {
+    console.info("🧹 Analytics cleared");
+  }
 }

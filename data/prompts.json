@@ -1,0 +1,22 @@
+[
+  {
+    "id": 1,
+    "category": "Mindfulness",
+    "prompt": "What is one small thing you can appreciate about today?"
+  },
+  {
+    "id": 2,
+    "category": "Growth",
+    "prompt": "What challenge recently taught you something valuable?"
+  },
+  {
+    "id": 3,
+    "category": "Gratitude",
+    "prompt": "Who made your day better recently, and why?"
+  },
+  {
+    "id": 4,
+    "category": "Reflection",
+    "prompt": "What emotion are you holding onto that you could release?"
+  }
+]

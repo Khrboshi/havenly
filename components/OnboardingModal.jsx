@@ -1,11 +1,21 @@
 "use client";
+
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
 const steps = [
-  { title: "Welcome to Havenly", text: "Let's help you start your reflection journey." },
-  { title: "Daily Reflections", text: "Answer one question each day to track growth." },
-  { title: "Private & Secure", text: "Everything stays safely in your browser." }
+  {
+    title: "Welcome to Havenly",
+    text: "Start your 7-day mindfulness challenge — write a short reflection each day and see your calm grow.",
+  },
+  {
+    title: "Daily Reflections",
+    text: "Take a few mindful minutes daily. Your reflections are stored locally and remain 100% private.",
+  },
+  {
+    title: "Progress & Calm",
+    text: "Track your streaks, celebrate milestones, and notice how reflection helps you feel more centered.",
+  },
 ];
 
 export default function OnboardingModal({ onFinish }) {
@@ -39,12 +49,12 @@ export default function OnboardingModal({ onFinish }) {
           exit={{ scale: 0.9, opacity: 0 }}
         >
           <h2 className="text-2xl font-semibold mb-4">{steps[index].title}</h2>
-          <p className="text-text-muted mb-6">{steps[index].text}</p>
+          <p className="text-slate-600 mb-6">{steps[index].text}</p>
           <button
             onClick={next}
             className="btn-primary w-full"
           >
-            {index === steps.length - 1 ? "Start Exploring" : "Next"}
+            {index === steps.length - 1 ? "Start Reflecting" : "Next"}
           </button>
         </motion.div>
       </motion.div>

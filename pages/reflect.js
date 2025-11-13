@@ -1,145 +1,140 @@
-import Head from 'next/head'
-import Header from '../components/Header'
-import Footer from '../components/Footer'
-import { useState, useEffect } from 'react'
-import prompts from '../data/prompts.json'
+"use client";
+
+import { useEffect, useState } from "react";
+import Head from "next/head";
+import { motion, AnimatePresence } from "framer-motion";
+import { CheckCircle, RefreshCw } from "lucide-react";
 
 export default function Reflect() {
-  const [i, setI] = useState(0)
-  const [text, setText] = useState('')
-  const [notes, setNotes] = useState([])
-  const [saveLocal, setSaveLocal] = useState(false)
+  const prompts = [
+    "What moment stood out to you today?",
+    "What did you learn or notice about yourself?",
+    "What would you like to release before tomorrow?",
+  ];
 
-  // Load saved session from localStorage
-  useEffect(() => {
-    try {
-      const savedOpt = localStorage.getItem('havenly_save_local')
-      if (savedOpt === 'true') setSaveLocal(true)
-      if (savedOpt === 'true') {
-        const s = localStorage.getItem('havenly_last_session')
-        if (s) setNotes(JSON.parse(s))
-      }
-    } catch (e) {
-      console.error(e)
-    }
-  }, [])
+  const [step, setStep] = useState(0);
+  const [answers, setAnswers] = useState([]);
+  const [completed, setCompleted] = useState(false);
 
-  // Save preference for local saving
-  useEffect(() => {
-    try {
-      if (saveLocal) localStorage.setItem('havenly_save_local', 'true')
-      else localStorage.removeItem('havenly_save_local')
-    } catch (e) {
-      console.error(e)
-    }
-  }, [saveLocal])
+  // ✅ Save last reflection date and update stats
+  const saveReflection = () => {
+    const entry = {
+      text: answers.join("\n\n"),
+      date: new Date().toISOString(),
+    };
 
-  // Move to next prompt
-  function next() {
-    if (!text.trim()) return
-    const newNotes = [...notes, text.trim()]
-    setNotes(newNotes)
-    setText('')
-    setI(i + 1)
-    if (saveLocal) {
-      try {
-        localStorage.setItem('havenly_last_session', JSON.stringify(newNotes))
-      } catch (e) {
-        console.error(e)
-      }
-    }
-  }
+    // Save in localStorage
+    const stored = JSON.parse(localStorage.getItem("reflections") || "[]");
+    localStorage.setItem("reflections", JSON.stringify([...stored, entry]));
 
-  // Finish session
-  function finish() {
-    if (saveLocal) {
-      try {
-        localStorage.setItem('havenly_last_session', JSON.stringify(notes))
-      } catch (e) {
-        console.error(e)
-      }
-    }
-    setI(prompts.length)
-  }
+    // Mark last reflection date (for DailyNudge)
+    localStorage.setItem("lastReflectionDate", entry.date);
 
-  // Restart reflection
-  function restart() {
-    setI(0)
-    setText('')
-    setNotes([])
-    try {
-      localStorage.removeItem('havenly_last_session')
-    } catch (e) {
-      console.error(e)
-    }
-  }
+    // Update cumulative progress counter
+    const total = stored.length + 1;
+    localStorage.setItem("totalReflections", total);
 
-  // If all prompts are done
-  if (i >= prompts.length) {
-    return (
-      <>
-        <Head><title>Reflection • Havenly</title></Head>
-        <Header />
-        <main className="container reflect-end">
-          <h2>You’re done — thank you for being here.</h2>
-          <div className="result-card">
-            {notes.map((n, idx) => (
-              <p key={idx}>• {n}</p>
-            ))}
-          </div>
-          <p className="muted">
-            This reflection stayed on your device
-            {saveLocal ? ' (saved locally)' : ''}.
-          </p>
-          <div className="row">
-            <a href="/rooms" className="btn-ghost">Back to Spaces</a>
-            <button className="btn-primary" onClick={restart}>Do another</button>
-          </div>
-        </main>
-        <Footer />
-      </>
-    )
-  }
+    // Trigger completion animation
+    setCompleted(true);
+  };
 
-  // Normal reflection screen
-  const currentPrompt = prompts[i]
+  const handleChange = (e) => {
+    const copy = [...answers];
+    copy[step] = e.target.value;
+    setAnswers(copy);
+  };
+
+  const next = () => {
+    if (step < prompts.length - 1) setStep(step + 1);
+    else saveReflection();
+  };
 
   return (
     <>
-      <Head><title>Reflect • Havenly</title></Head>
-      <Header />
-      <main className="container reflect">
-        {currentPrompt?.category && (
-          <h4 className="muted">{currentPrompt.category}</h4>
-        )}
-        <h2>{currentPrompt?.prompt}</h2>
-
-        <textarea
-          value={text}
-          onChange={e => setText(e.target.value)}
-          placeholder="Write what comes up…"
+      <Head>
+        <title>Reflect — Havenly</title>
+        <meta
+          name="description"
+          content="Reflect mindfully on your day — guided prompts that help you grow calm and clarity."
         />
+      </Head>
 
-        <div className="row" style={{ alignItems: 'center' }}>
-          <button className="btn-primary" onClick={next} disabled={!text.trim()}>
-            Continue
-          </button>
-          <button className="btn-ghost" onClick={finish}>Finish</button>
-          <label style={{ marginLeft: 12, color: '#666' }}>
-            <input
-              type="checkbox"
-              checked={saveLocal}
-              onChange={e => setSaveLocal(e.target.checked)}
-            />{' '}
-            Save locally on this device
-          </label>
-        </div>
+      <motion.main
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        className="max-w-2xl mx-auto py-16 px-6 text-center"
+      >
+        <h1 className="text-4xl font-semibold mb-8 text-slate-800 dark:text-slate-100">
+          Daily Reflection
+        </h1>
 
-        <p className="muted">
-          Your words are private — they stay on your device unless you choose to share or save them.
+        <AnimatePresence mode="wait">
+          {!completed ? (
+            <motion.div
+              key={step}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              transition={{ duration: 0.3 }}
+              className="bg-white/80 dark:bg-slate-800/80 backdrop-blur border border-slate-200 dark:border-slate-700 rounded-2xl shadow-sm p-6"
+            >
+              <p className="text-lg text-slate-700 dark:text-slate-200 mb-4">
+                {prompts[step]}
+              </p>
+
+              <textarea
+                value={answers[step] || ""}
+                onChange={handleChange}
+                placeholder="Write your thoughts here..."
+                className="input min-h-[140px] mb-4"
+              />
+
+              <button onClick={next} className="btn-primary w-full">
+                {step === prompts.length - 1 ? "Finish Reflection" : "Next"}
+              </button>
+            </motion.div>
+          ) : (
+            // ✅ Completion animation
+            <motion.div
+              key="completed"
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.5, ease: "easeOut" }}
+              className="flex flex-col items-center justify-center space-y-4"
+            >
+              <CheckCircle className="text-green-500 w-16 h-16" />
+              <h2 className="text-2xl font-semibold text-slate-800 dark:text-slate-100">
+                Great work!
+              </h2>
+              <p className="text-slate-600 dark:text-slate-300 max-w-md">
+                Your reflection has been saved. Each day brings a new step
+                toward greater calm and awareness.
+              </p>
+              <div className="flex gap-4 mt-4">
+                <a href="/progress" className="btn-secondary">
+                  View Progress
+                </a>
+                <button
+                  onClick={() => {
+                    setCompleted(false);
+                    setStep(0);
+                    setAnswers([]);
+                  }}
+                  className="btn-primary flex items-center gap-2"
+                >
+                  <RefreshCw size={16} /> New Reflection
+                </button>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        <p className="text-center text-slate-500 text-sm mt-8">
+          Your reflections stay private in your browser.
         </p>
-      </main>
-      <Footer />
+      </motion.main>
     </>
-  )
+  );
 }

@@ -1,27 +1,24 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import Head from "next/head";
-import Link from "next/link";
 import { motion } from "framer-motion";
-import OnboardingModal from "@/components/OnboardingModal";
-import ReferralBanner from "@/components/ReferralBanner";
-import UpgradeBanner from "@/components/UpgradeBanner";
+import Link from "next/link";
 import DailyPrompt from "@/components/DailyPrompt";
-import MotivationLayer from "@/components/MotivationLayer"; // ✅ Added import
+import OnboardingModal from "@/components/OnboardingModal";
 import { logEvent } from "@/utils/analytics";
 
 export default function Home() {
   const [showOnboard, setShowOnboard] = useState(false);
+  const [hasReflected, setHasReflected] = useState(false);
 
   useEffect(() => {
-    // ✅ Track homepage view
     logEvent("home_page_view");
+    const done = localStorage.getItem("onboardingCompleted");
+    const reflections = JSON.parse(localStorage.getItem("reflections") || "[]");
 
-    if (typeof window !== "undefined") {
-      const done = localStorage.getItem("onboardingCompleted");
-      if (!done) setShowOnboard(true);
-    }
+    if (!done) setShowOnboard(true);
+    if (reflections.length > 0) setHasReflected(true);
   }, []);
 
   const finishOnboard = () => {
@@ -33,10 +30,10 @@ export default function Home() {
   return (
     <>
       <Head>
-        <title>Havenly — A quiet space for mindful reflection — every day</title>
+        <title>Havenly — Reflect, Breathe, Grow</title>
         <meta
           name="description"
-          content="Havenly helps you slow down, reflect, and rediscover calm through guided prompts and daily reflections — private, secure, and beautifully simple."
+          content="Havenly helps you slow down, reflect, and rediscover calm through daily mindful writing and insights."
         />
       </Head>
 
@@ -47,50 +44,60 @@ export default function Home() {
         transition={{ duration: 0.8 }}
         className="relative py-24 text-center overflow-hidden"
       >
-        <div className="absolute inset-0 bg-gradient-to-b from-blue-50 to-white opacity-70 -z-10" />
+        <div className="absolute inset-0 bg-gradient-to-b from-blue-50 to-white dark:from-slate-900 dark:to-slate-950 opacity-80 -z-10" />
 
-        <h1 className="text-5xl sm:text-6xl font-extrabold text-slate-800 mb-6 leading-tight">
+        <h1 className="text-5xl sm:text-6xl font-extrabold text-slate-800 dark:text-slate-100 mb-6 leading-tight">
           A Quiet Space for{" "}
-          <span className="text-blue-600">Mindful Reflection</span>
+          <span className="text-blue-600 dark:text-blue-400">
+            Mindful Reflection
+          </span>
         </h1>
 
-        <p className="text-lg sm:text-xl text-slate-600 max-w-2xl mx-auto mb-10">
-          Slow down. Breathe. Write. Havenly helps you build calm through simple,
-          private journaling — your space to reconnect with yourself every day.
+        <p className="text-lg sm:text-xl text-slate-600 dark:text-slate-300 max-w-2xl mx-auto mb-10">
+          Slow down. Breathe. Write. Havenly helps you find calm through gentle
+          reflection — private, secure, and beautifully simple.
         </p>
 
         <div className="flex flex-col sm:flex-row justify-center gap-4">
-          <Link
-            href="/rooms"
-            onClick={() => logEvent("start_reflection_click")}
-            className="btn-primary"
-          >
-            Start My Reflection
-          </Link>
-
-          <Link
-            href="/premium"
-            onClick={() => logEvent("explore_premium_click")}
-            className="btn-secondary"
-          >
-            Explore Premium
-          </Link>
+          {hasReflected ? (
+            <>
+              <Link
+                href="/reflect"
+                onClick={() => logEvent("continue_reflection_click")}
+                className="btn-primary"
+              >
+                Continue Reflection
+              </Link>
+              <Link
+                href="/progress"
+                onClick={() => logEvent("view_progress_click")}
+                className="btn-secondary"
+              >
+                View My Journey
+              </Link>
+            </>
+          ) : (
+            <Link
+              href="/reflect"
+              onClick={() => logEvent("start_reflection_click")}
+              className="btn-primary"
+            >
+              Start My First Reflection
+            </Link>
+          )}
         </div>
 
-        <div className="mt-16 text-slate-500 text-sm">
-          No sign-ups. No distractions. Just space to breathe.
+        <div className="mt-16 text-slate-500 dark:text-slate-400 text-sm">
+          {hasReflected
+            ? "Welcome back — every day is a chance to begin again."
+            : "No sign-ups. No distractions. Just space to breathe."}
         </div>
       </motion.section>
 
-      {/* ✅ Motivation Layer (rotating quotes + breathing background) */}
-      <MotivationLayer />
-
-      {/* ✅ Daily prompt below motivational section */}
+      {/* Daily prompt (below hero) */}
       <DailyPrompt />
 
-      {/* ✅ BANNERS + ONBOARDING MODAL */}
-      <ReferralBanner />
-      <UpgradeBanner />
+      {/* Onboarding modal */}
       {showOnboard && <OnboardingModal onFinish={finishOnboard} />}
     </>
   );

@@ -7,7 +7,7 @@ import { useState, useEffect } from "react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import PremiumNudge from "@/components/PremiumNudge";
-import DailyReminder from "@/components/DailyReminder";
+import DailyNudge from "@/components/DailyNudge"; // ✅ added
 import PageLoader from "@/components/PageLoader";
 import OnboardingFlow from "@/components/OnboardingFlow";
 
@@ -16,7 +16,7 @@ export default function App({ Component, pageProps }) {
   const [loading, setLoading] = useState(false);
   const [showOnboarding, setShowOnboarding] = useState(false);
 
-  // Handle route transitions
+  // ✅ Handle route transitions
   useEffect(() => {
     const handleStart = () => setLoading(true);
     const handleStop = () => setTimeout(() => setLoading(false), 300);
@@ -32,7 +32,7 @@ export default function App({ Component, pageProps }) {
     };
   }, [router]);
 
-  // Show onboarding on first visit
+  // ✅ Show onboarding on first visit
   useEffect(() => {
     const hasSeen = localStorage.getItem("hasSeenOnboarding");
     if (!hasSeen) setShowOnboarding(true);
@@ -40,15 +40,17 @@ export default function App({ Component, pageProps }) {
 
   return (
     <>
+      {/* Onboarding overlay (first-time users) */}
       {showOnboarding && (
         <OnboardingFlow onFinish={() => setShowOnboarding(false)} />
       )}
 
       <Header />
 
-      {/* ✅ Smooth page transitions */}
+      {/* Page loader on route change */}
       <AnimatePresence>{loading && <PageLoader />}</AnimatePresence>
 
+      {/* Animated route transitions */}
       <AnimatePresence mode="wait" initial={false}>
         <motion.main
           key={router.asPath}
@@ -61,9 +63,12 @@ export default function App({ Component, pageProps }) {
           }}
           className="min-h-screen flex flex-col justify-between"
         >
+          {/* Main content */}
           <Component {...pageProps} />
+
+          {/* Engagement hooks */}
           <PremiumNudge />
-          <DailyReminder />
+          <DailyNudge /> {/* ✅ integrated nudge */}
         </motion.main>
       </AnimatePresence>
 

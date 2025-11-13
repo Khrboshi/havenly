@@ -1,39 +1,28 @@
+// /components/PageLoader.js
 "use client";
 
-import { motion, AnimatePresence } from "framer-motion";
-import { Loader2 } from "lucide-react";
+import { motion } from "framer-motion";
 
-export default function PageLoader({ isVisible = true }) {
+export default function PageLoader() {
   return (
-    <AnimatePresence>
-      {isVisible && (
-        <motion.div
-          className="fixed inset-0 z-[9999] flex items-center justify-center
-                     bg-white/80 dark:bg-slate-900/80 backdrop-blur-md"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: 0.35, ease: "easeOut" }}
-        >
-          {/* Rotating loader */}
-          <motion.div
-            className="flex flex-col items-center space-y-4"
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.3, ease: "easeOut" }}
-          >
-            <Loader2 className="w-10 h-10 text-blue-500 dark:text-blue-400 animate-spin" />
-            <motion.p
-              className="text-slate-600 dark:text-slate-300 text-sm font-medium tracking-wide"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.15 }}
-            >
-              Preparing your calm space...
-            </motion.p>
-          </motion.div>
-        </motion.div>
-      )}
-    </AnimatePresence>
+    <motion.div
+      className="fixed inset-0 z-[100] flex items-center justify-center bg-gradient-to-br from-blue-50 via-white to-blue-100 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.35, ease: "easeInOut" }}
+      aria-label="Page loading"
+    >
+      <motion.div
+        className="w-16 h-16 rounded-full border-[3px] border-blue-300 border-t-blue-600 dark:border-slate-600 dark:border-t-blue-400"
+        animate={{ rotate: 360 }}
+        transition={{
+          repeat: Infinity,
+          duration: 1,
+          ease: "linear",
+        }}
+      />
+      <span className="sr-only">Loading...</span>
+    </motion.div>
   );
 }

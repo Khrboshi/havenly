@@ -67,7 +67,7 @@ export default function Header() {
       <AnimatePresence>
         {open && (
           <>
-            {/* Dark Blurred Background Overlay */}
+            {/* Background Overlay */}
             <motion.div
               className="fixed inset-0 bg-slate-900/60 backdrop-blur-md z-40"
               initial={{ opacity: 0 }}
@@ -78,15 +78,15 @@ export default function Header() {
 
             {/* Slide-in Drawer */}
             <motion.div
-              className="fixed right-0 top-0 w-[80%] h-full bg-gradient-to-b from-slate-100 via-white to-slate-200 shadow-2xl z-50 flex flex-col p-6 rounded-l-3xl border-l border-slate-300"
+              className="fixed right-0 top-0 w-[78%] h-full bg-gradient-to-b from-blue-100 via-slate-50 to-blue-50 shadow-2xl z-50 flex flex-col p-5 rounded-l-3xl border-l border-slate-300"
               initial={{ x: "100%" }}
               animate={{ x: 0 }}
               exit={{ x: "100%" }}
               transition={{ type: "spring", stiffness: 160, damping: 22 }}
             >
-              {/* Header inside Drawer */}
-              <div className="flex justify-between items-center mb-6">
-                <span className="text-xl font-semibold text-slate-800">
+              {/* Drawer Header */}
+              <div className="flex justify-between items-center mb-4">
+                <span className="text-lg font-semibold text-slate-800">
                   Havenly Menu
                 </span>
                 <button
@@ -97,17 +97,17 @@ export default function Header() {
                 </button>
               </div>
 
-              {/* Navigation Items */}
-              <nav className="flex flex-col gap-3">
+              {/* Navigation Links */}
+              <nav className="flex flex-col gap-2">
                 {links.map((link) => (
                   <Link
                     key={link.href}
                     href={link.href}
                     onClick={closeMenu}
-                    className={`block py-3 px-5 rounded-xl text-lg font-medium transition-all shadow-sm ${
+                    className={`block py-2.5 px-4 rounded-xl text-base font-medium transition-all shadow-sm ${
                       router.pathname === link.href
-                        ? "bg-blue-100 text-blue-700 border border-blue-300 shadow-inner"
-                        : "bg-white/90 text-slate-700 hover:bg-blue-50 hover:shadow-md"
+                        ? "bg-blue-600 text-white shadow-md"
+                        : "text-slate-700 hover:bg-blue-100 hover:text-blue-700"
                     }`}
                   >
                     {link.label}
@@ -115,9 +115,9 @@ export default function Header() {
                 ))}
               </nav>
 
-              {/* Footer Info */}
-              <div className="mt-auto pt-10 text-center text-slate-500 text-sm border-t border-slate-300">
-                Havenly © {new Date().getFullYear()} — Calm begins here.
+              {/* Footer */}
+              <div className="mt-auto pt-8 text-center text-slate-500 text-sm border-t border-slate-300">
+                © {new Date().getFullYear()} Havenly — Reflect, Breathe, Grow.
               </div>
             </motion.div>
           </>

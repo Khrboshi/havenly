@@ -22,9 +22,9 @@ export default function Reflect() {
   const [stats, setStats] = useState({ streak: 0, total: 0 });
   const [toast, setToast] = useState({ show: false, message: "" });
 
-  // ✅ Helper: calculate streak
+  // ✅ Helper: calculate streak safely
   const calculateStreak = (reflections) => {
-    if (reflections.length === 0) return 0;
+    if (!reflections?.length) return 0;
     const sorted = [...reflections].sort(
       (a, b) => new Date(a.date) - new Date(b.date)
     );
@@ -39,8 +39,10 @@ export default function Reflect() {
     return streak;
   };
 
-  // ✅ Save reflection and check milestones
+  // ✅ Save reflection (with client guard)
   const saveReflection = () => {
+    if (typeof window === "undefined") return;
+
     const entry = {
       text: answers.join("\n\n"),
       date: new Date().toISOString(),
@@ -48,6 +50,7 @@ export default function Reflect() {
 
     const stored = JSON.parse(localStorage.getItem("reflections") || "[]");
     const updated = [...stored, entry];
+
     localStorage.setItem("reflections", JSON.stringify(updated));
     localStorage.setItem("lastReflectionDate", entry.date);
 
@@ -74,15 +77,13 @@ export default function Reflect() {
         milestone = "🪶 Voice of Calm – 1,000 words written!";
     }
 
-    if (milestone) {
-      setToast({ show: true, message: milestone });
-    }
+    if (milestone) setToast({ show: true, message: milestone });
 
     setStats({ streak, total });
     setCompleted(true);
     setReflectionSaved(true);
 
-    // Hide MotivationLayer after 10s
+    // Hide Motivation layer after 10 s
     setTimeout(() => setReflectionSaved(false), 10000);
   };
 
@@ -186,10 +187,7 @@ export default function Reflect() {
         {/* ✅ Motivation + Celebration + Toast */}
         {reflectionSaved && <MotivationLayer />}
         {completed && (
-          <AchievementCelebration
-            streak={stats.streak}
-            total={stats.total}
-          />
+          <AchievementCelebration streak={stats.streak} total={stats.total} />
         )}
         <MilestoneToast
           message={toast.message}

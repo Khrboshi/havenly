@@ -9,11 +9,14 @@ import Footer from "@/components/Footer";
 import PremiumNudge from "@/components/PremiumNudge";
 import DailyReminder from "@/components/DailyReminder";
 import PageLoader from "@/components/PageLoader";
+import OnboardingFlow from "@/components/OnboardingFlow";
 
 export default function App({ Component, pageProps }) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
+  const [showOnboarding, setShowOnboarding] = useState(false);
 
+  // Handle route transitions
   useEffect(() => {
     const handleStart = () => setLoading(true);
     const handleStop = () => setTimeout(() => setLoading(false), 300);
@@ -29,11 +32,21 @@ export default function App({ Component, pageProps }) {
     };
   }, [router]);
 
+  // Show onboarding on first visit
+  useEffect(() => {
+    const hasSeen = localStorage.getItem("hasSeenOnboarding");
+    if (!hasSeen) setShowOnboarding(true);
+  }, []);
+
   return (
     <>
+      {showOnboarding && (
+        <OnboardingFlow onFinish={() => setShowOnboarding(false)} />
+      )}
+
       <Header />
 
-      {/* ✅ Show PageLoader when navigating */}
+      {/* ✅ Smooth page transitions */}
       <AnimatePresence>{loading && <PageLoader />}</AnimatePresence>
 
       <AnimatePresence mode="wait" initial={false}>

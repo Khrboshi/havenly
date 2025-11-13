@@ -1,18 +1,10 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import Head from "next/head";
 import { motion } from "framer-motion";
 import AchievementCelebration from "@/components/AchievementCelebration";
-import AchievementsPanel from "@/components/AchievementsPanel"; // ✅ proper import
-import {
-  LineChart,
-  Line,
-  XAxis,
-  YAxis,
-  Tooltip,
-  ResponsiveContainer,
-} from "recharts";
+import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer } from "recharts";
 
 export default function Progress() {
   const [stats, setStats] = useState({
@@ -22,50 +14,11 @@ export default function Progress() {
     streak: 0,
   });
   const [chartData, setChartData] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const reflections = JSON.parse(localStorage.getItem("reflections") || "[]");
-    if (reflections.length === 0) return;
-
-    const now = new Date();
-    const month = now.getMonth();
-    const year = now.getFullYear();
-
-    // This month’s reflections
-    const monthRefs = reflections.filter((r) => {
-      const d = new Date(r.date);
-      return d.getMonth() === month && d.getFullYear() === year;
-    });
-
-    const totalWords = reflections.reduce(
-      (sum, r) => sum + r.text.split(/\s+/).length,
-      0
-    );
-    const avgWords = (totalWords / reflections.length).toFixed(0);
-
-    // Streak calculation
-    const streak = calculateStreak(reflections);
-
-    // Weekly chart data
-    const last7 = reflections.slice(-7).map((r) => ({
-      date: new Date(r.date).toLocaleDateString("en-US", {
-        month: "short",
-        day: "numeric",
-      }),
-      words: r.text.split(/\s+/).length,
-    }));
-
-    setStats({
-      total: reflections.length,
-      thisMonth: monthRefs.length,
-      avgWords,
-      streak,
-    });
-    setChartData(last7);
-  }, []);
-
+  // ✅ Calculate reflection streak
   const calculateStreak = (reflections) => {
-    if (reflections.length === 0) return 0;
+    if (!reflections?.length) return 0;
     const sorted = [...reflections].sort(
       (a, b) => new Date(a.date) - new Date(b.date)
     );
@@ -79,6 +32,55 @@ export default function Progress() {
     }
     return streak;
   };
+
+  // ✅ Load reflections safely on client
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    const reflections = JSON.parse(localStorage.getItem("reflections") || "[]");
+    if (reflections.length === 0) {
+      setLoading(false);
+      return;
+    }
+
+    const now = new Date();
+    const month = now.getMonth();
+    const year = now.getFullYear();
+
+    // Filter this month’s reflections
+    const monthRefs = reflections.filter((r) => {
+      const d = new Date(r.date);
+      return d.getMonth() === month && d.getFullYear() === year;
+    });
+
+    const totalWords = reflections.reduce(
+      (sum, r) => sum + r.text.split(/\s+/).length,
+      0
+    );
+    const avgWords = (totalWords / reflections.length).toFixed(0);
+    const streak = calculateStreak(reflections);
+
+    // Prepare last-7-days data for chart
+    const last7 = reflections
+      .slice(-7)
+      .map((r) => ({
+        date: new Date(r.date).toLocaleDateString("en-US", {
+          month: "short",
+          day: "numeric",
+        }),
+        words: r.text.split(/\s+/).length,
+      }))
+      .reverse();
+
+    setStats({
+      total: reflections.length,
+      thisMonth: monthRefs.length,
+      avgWords,
+      streak,
+    });
+    setChartData(last7);
+    setLoading(false);
+  }, []);
 
   return (
     <>
@@ -100,7 +102,10 @@ export default function Progress() {
           Your Journey So Far
         </h1>
 
-        {stats.total === 0 ? (
+        {/* 🕓 Loading skeleton */}
+        {loading ? (
+          <div className="text-center text-slate-500">Loading your progress...</div>
+        ) : stats.total === 0 ? (
           <div className="text-center text-slate-500">
             No reflections yet. Start today to begin your calm journey.
             <a href="/reflect" className="btn-primary mt-4 inline-block">
@@ -109,7 +114,7 @@ export default function Progress() {
           </div>
         ) : (
           <>
-            {/* Stats grid */}
+            {/* 📊 Stats grid */}
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -121,24 +126,30 @@ export default function Progress() {
                 { label: "Avg. Words", value: stats.avgWords },
                 { label: "Current Streak", value: `${stats.streak} 🔥` },
               ].map((s) => (
-                <div
+                <motion.div
                   key={s.label}
-                  className="card text-center hover:shadow-glow transition"
+                  whileHover={{ scale: 1.03 }}
+                  className="card text-center"
                 >
                   <h3 className="text-slate-600 dark:text-slate-300 mb-1">
                     {s.label}
                   </h3>
-                  <p className="text-3xl font-bold text-blue-600 dark:text-blue-400">
+                  <motion.p
+                    className="text-3xl font-bold text-blue-600 dark:text-blue-400"
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.4 }}
+                  >
                     {s.value}
-                  </p>
-                </div>
+                  </motion.p>
+                </motion.div>
               ))}
             </motion.div>
 
-            {/* Weekly trend chart */}
+            {/* 📈 Weekly chart */}
             <div className="card p-6">
               <h2 className="text-xl font-semibold mb-4 text-slate-800 dark:text-slate-100">
-                Writing Trend (Last 7 Days)
+                Writing Trend (Last 7 Reflections)
               </h2>
               {chartData.length > 1 ? (
                 <ResponsiveContainer width="100%" height={250}>
@@ -161,21 +172,21 @@ export default function Progress() {
                       strokeWidth={3}
                       dot={{ r: 4 }}
                       activeDot={{ r: 6 }}
+                      animationDuration={800}
                     />
                   </LineChart>
                 </ResponsiveContainer>
               ) : (
-                <p className="text-slate-500">Not enough data yet for trends.</p>
+                <p className="text-slate-500">
+                  Not enough data yet for trends — keep writing!
+                </p>
               )}
             </div>
-
-            {/* Achievements panel */}
-            <AchievementsPanel />
 
             {/* CTA */}
             <div className="text-center mt-12">
               <p className="text-slate-600 dark:text-slate-300 mb-4">
-                Every entry adds depth to your calm.
+                Every reflection strengthens your calm.
               </p>
               <a href="/reflect" className="btn-primary">
                 Write a New Reflection
@@ -184,11 +195,8 @@ export default function Progress() {
           </>
         )}
 
-        {/* Celebration triggers */}
-        <AchievementCelebration
-          streak={stats.streak}
-          total={stats.total}
-        />
+        {/* 🎉 Celebration overlay */}
+        <AchievementCelebration streak={stats.streak} total={stats.total} />
       </motion.main>
     </>
   );

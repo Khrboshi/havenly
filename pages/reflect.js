@@ -4,6 +4,8 @@ import { useEffect, useState } from "react";
 import Head from "next/head";
 import { motion, AnimatePresence } from "framer-motion";
 import { CheckCircle, RefreshCw } from "lucide-react";
+import MotivationLayer from "@/components/MotivationLayer";
+import AchievementCelebration from "@/components/AchievementCelebration";
 
 export default function Reflect() {
   const prompts = [
@@ -15,27 +17,51 @@ export default function Reflect() {
   const [step, setStep] = useState(0);
   const [answers, setAnswers] = useState([]);
   const [completed, setCompleted] = useState(false);
+  const [reflectionSaved, setReflectionSaved] = useState(false);
+  const [stats, setStats] = useState({ streak: 0, total: 0 });
 
-  // ✅ Save last reflection date and update stats
+  // ✅ Helper: calculate streak
+  const calculateStreak = (reflections) => {
+    if (reflections.length === 0) return 0;
+
+    const sorted = [...reflections].sort(
+      (a, b) => new Date(a.date) - new Date(b.date)
+    );
+    let streak = 1;
+    for (let i = sorted.length - 2; i >= 0; i--) {
+      const a = new Date(sorted[i + 1].date);
+      const b = new Date(sorted[i].date);
+      const diffDays = Math.floor((a - b) / (1000 * 60 * 60 * 24));
+      if (diffDays === 1) streak++;
+      else break;
+    }
+    return streak;
+  };
+
+  // ✅ Save reflection and update stats
   const saveReflection = () => {
     const entry = {
       text: answers.join("\n\n"),
       date: new Date().toISOString(),
     };
 
-    // Save in localStorage
     const stored = JSON.parse(localStorage.getItem("reflections") || "[]");
-    localStorage.setItem("reflections", JSON.stringify([...stored, entry]));
+    const updated = [...stored, entry];
+    localStorage.setItem("reflections", JSON.stringify(updated));
 
-    // Mark last reflection date (for DailyNudge)
     localStorage.setItem("lastReflectionDate", entry.date);
 
-    // Update cumulative progress counter
-    const total = stored.length + 1;
+    const total = updated.length;
+    const streak = calculateStreak(updated);
     localStorage.setItem("totalReflections", total);
+    localStorage.setItem("streakCount", streak);
 
-    // Trigger completion animation
+    setStats({ streak, total });
     setCompleted(true);
+    setReflectionSaved(true);
+
+    // Hide MotivationLayer after 10s
+    setTimeout(() => setReflectionSaved(false), 10000);
   };
 
   const handleChange = (e) => {
@@ -95,7 +121,6 @@ export default function Reflect() {
               </button>
             </motion.div>
           ) : (
-            // ✅ Completion animation
             <motion.div
               key="completed"
               initial={{ scale: 0.9, opacity: 0 }}
@@ -112,6 +137,7 @@ export default function Reflect() {
                 Your reflection has been saved. Each day brings a new step
                 toward greater calm and awareness.
               </p>
+
               <div className="flex gap-4 mt-4">
                 <a href="/progress" className="btn-secondary">
                   View Progress
@@ -134,6 +160,15 @@ export default function Reflect() {
         <p className="text-center text-slate-500 text-sm mt-8">
           Your reflections stay private in your browser.
         </p>
+
+        {/* ✅ Motivation + Celebration layers */}
+        {reflectionSaved && <MotivationLayer />}
+        {completed && (
+          <AchievementCelebration
+            streak={stats.streak}
+            total={stats.total}
+          />
+        )}
       </motion.main>
     </>
   );

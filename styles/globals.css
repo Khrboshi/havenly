@@ -2,43 +2,50 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Global background + typography */
+/* General base styling */
 body {
-  @apply bg-gradient-to-b from-blue-50 via-indigo-50 to-white text-slate-800 font-sans antialiased;
+  @apply bg-slate-50 text-slate-800 font-sans antialiased;
+  scroll-behavior: smooth;
 }
 
-h1, h2, h3 {
-  @apply font-semibold text-slate-800;
+h1, h2, h3, h4 {
+  @apply font-display text-slate-900;
 }
 
 a {
   @apply transition-colors duration-200;
 }
 
-button {
-  @apply focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2;
-}
-
-/* Layout container */
-.container {
-  @apply max-w-5xl mx-auto px-6;
-}
-
-/* Buttons */
+/* Button Styles */
 .btn-primary {
-  @apply bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-full font-medium shadow-sm transition;
+  @apply bg-primary text-white px-6 py-3 rounded-full font-semibold shadow-soft hover:shadow-glow transition-all duration-300;
 }
 
 .btn-secondary {
-  @apply border border-blue-600 text-blue-600 hover:bg-blue-50 px-6 py-3 rounded-full font-medium transition;
+  @apply border border-primary text-primary px-6 py-3 rounded-full font-semibold hover:bg-primary hover:text-white transition-all duration-300;
 }
 
-/* Card */
+/* Cards and Containers */
 .card {
-  @apply bg-white border border-slate-200 rounded-2xl shadow-sm p-6;
+  @apply bg-white/80 backdrop-blur-sm border border-slate-200 rounded-2xl shadow-soft p-6;
 }
 
-/* Footer gradient */
-footer {
-  @apply bg-gradient-to-t from-blue-50 to-white border-t border-slate-200;
+/* Smooth link hover underlines */
+a.underline-hover {
+  position: relative;
+}
+
+a.underline-hover::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -2px;
+  width: 0;
+  height: 2px;
+  background: theme('colors.primary.DEFAULT');
+  transition: width 0.3s ease;
+}
+
+a.underline-hover:hover::after {
+  width: 100%;
 }

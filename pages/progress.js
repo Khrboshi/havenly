@@ -7,6 +7,7 @@ import Link from "next/link";
 import StreakTracker from "@/components/StreakTracker";
 import HabitBuilder from "@/components/HabitBuilder";
 import MoodTrendChart from "@/components/MoodTrendChart";
+import AchievementCelebration from "@/components/AchievementCelebration";
 
 export default function Progress() {
   const [stats, setStats] = useState({
@@ -139,6 +140,9 @@ export default function Progress() {
                 <MoodTrendChart />
               </div>
             </div>
+
+            {/* ✅ Reward Pop-up System */}
+            <AchievementCelebration streak={stats.streak} total={stats.total} />
 
             {/* ✅ Motivational footer */}
             <div className="text-center mt-12 space-y-3">

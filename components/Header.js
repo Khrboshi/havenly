@@ -1,31 +1,12 @@
 "use client";
 
-import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { motion, AnimatePresence } from "framer-motion";
+import { useState } from "react";
 import { Menu, X } from "lucide-react";
 
 export default function Header() {
-  const [isOpen, setIsOpen] = useState(false);
-
-  const navLinks = [
-    { href: "/rooms", label: "Spaces" },
-    { href: "/community", label: "Community" },
-    { href: "/history", label: "My Reflections" },
-    { href: "/progress", label: "Progress" },
-    { href: "/premium", label: "Premium" },
-    { href: "/privacy", label: "Privacy" },
-    { href: "/about", label: "About" },
-  ];
-
-  const toggleMenu = (state) => {
-    // ✅ Optional haptic feedback for mobile users
-    if (typeof window !== "undefined" && "vibrate" in navigator) {
-      navigator.vibrate(10); // short vibration pulse
-    }
-    setIsOpen(state);
-  };
+  const [menuOpen, setMenuOpen] = useState(false);
 
   return (
     <header className="bg-white/80 backdrop-blur border-b border-slate-200 sticky top-0 z-50">
@@ -35,89 +16,61 @@ export default function Header() {
           <Image
             src="/logo.png"
             alt="Havenly logo"
-            width={36}
-            height={36}
-            priority
+            width={32}
+            height={32}
             className="transition-transform group-hover:scale-105"
           />
           <span className="text-lg font-semibold text-slate-800">Havenly</span>
         </Link>
 
-        {/* Desktop Navigation */}
+        {/* Desktop Nav */}
         <nav className="hidden md:flex gap-6 text-slate-600 text-sm sm:text-base">
-          {navLinks.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              className="hover:text-blue-600 transition"
-            >
-              {link.label}
-            </Link>
-          ))}
+          <Link href="/rooms" className="hover:text-blue-600 transition">
+            Spaces
+          </Link>
+          <Link href="/community" className="hover:text-blue-600 transition">
+            Community
+          </Link>
+          <Link href="/history" className="hover:text-blue-600 transition">
+            My Reflections
+          </Link>
+          <Link href="/progress" className="hover:text-blue-600 transition">
+            Progress
+          </Link>
+          <Link href="/premium" className="hover:text-blue-600 transition">
+            Premium
+          </Link>
         </nav>
 
-        {/* Mobile Menu Button */}
+        {/* Mobile Menu Toggle */}
         <button
-          onClick={() => toggleMenu(true)}
-          className="md:hidden p-2 text-slate-700 hover:text-blue-600 transition"
-          aria-label="Open menu"
+          onClick={() => setMenuOpen(!menuOpen)}
+          className="md:hidden text-slate-700 hover:text-blue-600 transition"
+          aria-label="Toggle menu"
         >
-          <Menu size={24} />
+          {menuOpen ? <X size={24} /> : <Menu size={24} />}
         </button>
       </div>
 
-      {/* Drawer Menu for Mobile */}
-      <AnimatePresence>
-        {isOpen && (
-          <>
-            {/* Overlay */}
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 0.4 }}
-              exit={{ opacity: 0 }}
-              className="fixed inset-0 bg-black z-40"
-              onClick={() => toggleMenu(false)}
-            />
-
-            {/* Slide-in Drawer */}
-            <motion.div
-              initial={{ x: "100%" }}
-              animate={{ x: 0 }}
-              exit={{ x: "100%" }}
-              transition={{ type: "spring", stiffness: 300, damping: 30 }}
-              className="fixed top-0 right-0 w-3/4 max-w-xs h-full bg-white shadow-xl z-50 flex flex-col"
+      {/* Slide-in Drawer for Mobile */}
+      {menuOpen && (
+        <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-40 md:hidden">
+          <div className="absolute right-0 top-0 w-3/4 h-full bg-white shadow-xl p-6 flex flex-col gap-4 animate-slide-in">
+            <button
+              onClick={() => setMenuOpen(false)}
+              className="self-end mb-2 text-slate-500 hover:text-slate-700"
             >
-              <div className="flex justify-between items-center p-4 border-b border-slate-200">
-                <span className="text-lg font-semibold text-slate-800">Menu</span>
-                <button
-                  onClick={() => toggleMenu(false)}
-                  aria-label="Close menu"
-                  className="text-slate-700 hover:text-blue-600 transition"
-                >
-                  <X size={24} />
-                </button>
-              </div>
-
-              <nav className="flex flex-col mt-4 space-y-4 px-6">
-                {navLinks.map((link) => (
-                  <Link
-                    key={link.href}
-                    href={link.href}
-                    className="text-slate-700 text-lg hover:text-blue-600 transition"
-                    onClick={() => toggleMenu(false)}
-                  >
-                    {link.label}
-                  </Link>
-                ))}
-              </nav>
-
-              <div className="mt-auto border-t border-slate-200 p-6 text-center text-sm text-slate-500">
-                © {new Date().getFullYear()} Havenly
-              </div>
-            </motion.div>
-          </>
-        )}
-      </AnimatePresence>
+              <X size={24} />
+            </button>
+            <Link href="/rooms" onClick={() => setMenuOpen(false)}>Spaces</Link>
+            <Link href="/community" onClick={() => setMenuOpen(false)}>Community</Link>
+            <Link href="/history" onClick={() => setMenuOpen(false)}>My Reflections</Link>
+            <Link href="/progress" onClick={() => setMenuOpen(false)}>Progress</Link>
+            <Link href="/premium" onClick={() => setMenuOpen(false)}>Premium</Link>
+            <Link href="/privacy" onClick={() => setMenuOpen(false)}>Privacy</Link>
+          </div>
+        </div>
+      )}
     </header>
   );
 }

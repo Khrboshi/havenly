@@ -2,7 +2,8 @@ import "@/styles/globals.css";
 import { AnimatePresence, motion } from "framer-motion";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import PremiumNudge from "@/components/PremiumNudge"; // ✅ new import
+import PremiumNudge from "@/components/PremiumNudge";
+import DailyReminder from "@/components/DailyReminder";
 
 export default function App({ Component, pageProps, router }) {
   return (
@@ -18,8 +19,10 @@ export default function App({ Component, pageProps, router }) {
           className="min-h-screen flex flex-col justify-between"
         >
           <Component {...pageProps} />
-          {/* ✅ Global engagement nudge appears across the site */}
+
+          {/* ✅ Global engagement and retention systems */}
           <PremiumNudge />
+          <DailyReminder />
         </motion.main>
       </AnimatePresence>
       <Footer />

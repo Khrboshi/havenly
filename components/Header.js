@@ -20,11 +20,24 @@ export default function Header() {
         </Link>
 
         <nav className="flex gap-6 text-slate-600 text-sm sm:text-base">
-          <Link href="/rooms" className="hover:text-blue-600 transition">Spaces</Link>
-          <Link href="/community" className="hover:text-blue-600 transition">Community</Link>
-          <Link href="/history" className="hover:text-blue-600 transition">My Reflections</Link>
-          <Link href="/premium" className="hover:text-blue-600 transition">Premium</Link>
-          <Link href="/privacy" className="hover:text-blue-600 transition">Privacy</Link>
+          <Link href="/rooms" className="hover:text-blue-600 transition">
+            Spaces
+          </Link>
+          <Link href="/community" className="hover:text-blue-600 transition">
+            Community
+          </Link>
+          <Link href="/history" className="hover:text-blue-600 transition">
+            My Reflections
+          </Link>
+          <Link href="/progress" className="hover:text-blue-600 transition">
+            Progress
+          </Link>
+          <Link href="/premium" className="hover:text-blue-600 transition">
+            Premium
+          </Link>
+          <Link href="/privacy" className="hover:text-blue-600 transition">
+            Privacy
+          </Link>
         </nav>
       </div>
     </header>

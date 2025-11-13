@@ -8,7 +8,8 @@ import OnboardingModal from "@/components/OnboardingModal";
 import ReferralBanner from "@/components/ReferralBanner";
 import UpgradeBanner from "@/components/UpgradeBanner";
 import DailyPrompt from "@/components/DailyPrompt";
-import { logEvent } from "@/utils/analytics"; // ✅ NEW analytics import
+import MotivationLayer from "@/components/MotivationLayer"; // ✅ Added import
+import { logEvent } from "@/utils/analytics";
 
 export default function Home() {
   const [showOnboard, setShowOnboard] = useState(false);
@@ -81,10 +82,13 @@ export default function Home() {
         </div>
       </motion.section>
 
-      {/* ✅ Daily prompt below hero */}
+      {/* ✅ Motivation Layer (rotating quotes + breathing background) */}
+      <MotivationLayer />
+
+      {/* ✅ Daily prompt below motivational section */}
       <DailyPrompt />
 
-      {/* BANNERS + MODAL */}
+      {/* ✅ BANNERS + ONBOARDING MODAL */}
       <ReferralBanner />
       <UpgradeBanner />
       {showOnboard && <OnboardingModal onFinish={finishOnboard} />}

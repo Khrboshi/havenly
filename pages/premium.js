@@ -1,6 +1,6 @@
 "use client";
 
-import Head from "next/head";
+import SEO from "@/components/SEO";
 import Link from "next/link";
 import { motion } from "framer-motion";
 
@@ -34,13 +34,11 @@ export default function Premium() {
 
   return (
     <>
-      <Head>
-        <title>Havenly Premium — Deepen Your Mindful Practice</title>
-        <meta
-          name="description"
-          content="Upgrade to Havenly Premium for guided themes, voice reflections, and deeper journaling tools to enrich your daily mindfulness."
-        />
-      </Head>
+      {/* ✅ SEO: dynamic title + description for this page */}
+      <SEO
+        title="Havenly Premium — Deepen Your Mindful Practice"
+        description="Upgrade to Havenly Premium for guided themes, voice reflections, and deeper journaling experiences."
+      />
 
       <motion.section
         initial={{ opacity: 0, y: 20 }}
@@ -51,6 +49,7 @@ export default function Premium() {
         <h1 className="text-5xl font-extrabold text-slate-800 mb-6 leading-tight">
           Deepen Your Reflection Practice
         </h1>
+
         <p className="text-lg sm:text-xl text-slate-600 max-w-2xl mx-auto mb-12">
           You’ve already started your journey toward mindfulness.  
           Havenly Premium helps you explore it further — with guided experiences and exclusive tools designed to support your calm.
@@ -80,6 +79,7 @@ export default function Premium() {
                   </li>
                 ))}
               </ul>
+
               <p className="text-lg font-semibold mb-4 text-slate-800">
                 {tier.price}
               </p>

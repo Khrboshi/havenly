@@ -2,108 +2,111 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import Image from "next/image";
+import { useRouter } from "next/router";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X } from "lucide-react";
 
+const navLinks = [
+  { label: "Spaces", href: "/" },
+  { label: "Reflect", href: "/reflect" },
+  { label: "History", href: "/history" },
+  { label: "Progress", href: "/progress" },
+  { label: "Premium", href: "/premium" },
+  { label: "Community", href: "/community" },
+  { label: "About", href: "/about" },
+  { label: "Privacy", href: "/privacy" },
+];
+
 export default function Header() {
+  const router = useRouter();
   const [open, setOpen] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
 
+  // Disable background scroll when menu is open
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 10);
-    window.addEventListener("scroll", onScroll);
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
+    document.body.style.overflow = open ? "hidden" : "auto";
+  }, [open]);
 
-  const navLinks = [
-    { href: "/rooms", label: "Spaces" },
-    { href: "/unpack", label: "Reflect" },
-    { href: "/history", label: "History" },
-    { href: "/progress", label: "Progress" },
-    { href: "/community", label: "Community" },
-    { href: "/premium", label: "Premium" },
-    { href: "/about", label: "About" },
-    { href: "/privacy", label: "Privacy" },
-  ];
+  // Auto-close on route change
+  useEffect(() => {
+    const handleRouteChange = () => setOpen(false);
+    router.events.on("routeChangeStart", handleRouteChange);
+    return () => router.events.off("routeChangeStart", handleRouteChange);
+  }, [router.events]);
 
   return (
-    <header
-      className={`fixed top-0 w-full z-50 transition-all duration-300 ${
-        scrolled
-          ? "bg-white/80 dark:bg-slate-900/80 backdrop-blur-md shadow-sm border-b border-slate-200 dark:border-slate-700"
-          : "bg-white/70 dark:bg-slate-900/70 backdrop-blur-md"
-      }`}
-    >
-      <div className="max-w-6xl mx-auto px-6 flex items-center justify-between h-16">
-        {/* Logo */}
-        <Link href="/" className="flex items-center gap-2 group">
-          <Image
-            src="/logo.png"
-            alt="Havenly logo"
-            width={36}
-            height={36}
-            priority
-            className="transition-transform group-hover:scale-105"
-          />
-          <span className="text-xl font-semibold text-slate-800 dark:text-slate-100">
-            Havenly
-          </span>
+    <header className="fixed top-0 left-0 w-full z-40 bg-white/70 dark:bg-slate-900/70 backdrop-blur-md border-b border-slate-200 dark:border-slate-700 shadow-sm">
+      <div className="max-w-7xl mx-auto flex items-center justify-between px-6 py-3">
+        {/* Brand / Logo */}
+        <Link
+          href="/"
+          className="text-2xl font-bold text-blue-600 dark:text-blue-400 tracking-tight"
+        >
+          Havenly
         </Link>
 
-        {/* Desktop Nav */}
-        <nav className="hidden md:flex gap-6 text-sm font-medium">
-          {navLinks.map(({ href, label }) => (
+        {/* Desktop Navigation */}
+        <nav className="hidden md:flex items-center space-x-6">
+          {navLinks.map(({ label, href }) => (
             <Link
               key={href}
               href={href}
-              className="text-slate-700 dark:text-slate-200 hover:text-blue-600 dark:hover:text-blue-400 transition"
+              className={`transition-colors duration-200 ${
+                router.pathname === href
+                  ? "text-blue-600 dark:text-blue-400 font-semibold"
+                  : "text-slate-700 dark:text-slate-200 hover:text-blue-500"
+              }`}
             >
               {label}
             </Link>
           ))}
         </nav>
 
-        {/* Mobile Menu Button */}
+        {/* Mobile Menu Toggle */}
         <button
+          className="md:hidden text-slate-700 dark:text-slate-200 hover:text-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-400 rounded-lg p-2"
+          aria-label={open ? "Close menu" : "Open menu"}
           onClick={() => setOpen(!open)}
-          className="md:hidden p-2 rounded-md hover:bg-slate-200/50 dark:hover:bg-slate-700/50 transition"
-          aria-label="Toggle menu"
         >
-          {open ? (
-            <X className="w-6 h-6 text-slate-800 dark:text-slate-100" />
-          ) : (
-            <Menu className="w-6 h-6 text-slate-800 dark:text-slate-100" />
-          )}
+          {open ? <X size={26} /> : <Menu size={26} />}
         </button>
       </div>
 
       {/* Mobile Menu Overlay */}
       <AnimatePresence>
         {open && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-slate-900/95 backdrop-blur-md flex flex-col items-center justify-center space-y-6 text-lg z-40 md:hidden"
+          <motion.nav
+            key="mobile-menu"
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            transition={{ duration: 0.25, ease: "easeOut" }}
+            className="fixed inset-0 bg-slate-900/95 backdrop-blur-md flex flex-col items-center justify-center space-y-6 text-lg font-medium text-white md:hidden"
           >
-            {navLinks.map(({ href, label }) => (
-              <Link
+            {navLinks.map(({ label, href }) => (
+              <motion.div
                 key={href}
-                href={href}
-                className="text-white text-xl font-medium hover:text-blue-400 transition"
+                whileTap={{ scale: 0.95 }}
                 onClick={() => setOpen(false)}
               >
-                {label}
-              </Link>
+                <Link
+                  href={href}
+                  className={`block text-center ${
+                    router.pathname === href
+                      ? "text-blue-400 font-semibold underline underline-offset-4"
+                      : "hover:text-blue-300"
+                  }`}
+                >
+                  {label}
+                </Link>
+              </motion.div>
             ))}
             <button
               onClick={() => setOpen(false)}
-              className="btn-secondary mt-8 text-white border-white hover:bg-white hover:text-slate-900"
+              className="mt-8 text-sm text-slate-300 hover:text-white underline underline-offset-2"
             >
               Close Menu
             </button>
-          </motion.div>
+          </motion.nav>
         )}
       </AnimatePresence>
     </header>

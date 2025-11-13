@@ -4,7 +4,15 @@ import { useState, useEffect } from "react";
 import Head from "next/head";
 import { motion } from "framer-motion";
 import AchievementCelebration from "@/components/AchievementCelebration";
-import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer } from "recharts";
+import AchievementsPanel from "@/components/AchievementsPanel"; // ✅ proper import
+import {
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  Tooltip,
+  ResponsiveContainer,
+} from "recharts";
 
 export default function Progress() {
   const [stats, setStats] = useState({
@@ -161,6 +169,9 @@ export default function Progress() {
               )}
             </div>
 
+            {/* Achievements panel */}
+            <AchievementsPanel />
+
             {/* CTA */}
             <div className="text-center mt-12">
               <p className="text-slate-600 dark:text-slate-300 mb-4">
@@ -172,6 +183,7 @@ export default function Progress() {
             </div>
           </>
         )}
+
         {/* Celebration triggers */}
         <AchievementCelebration
           streak={stats.streak}

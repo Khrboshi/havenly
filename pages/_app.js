@@ -58,6 +58,3 @@ export default function App({ Component, pageProps }) {
     </>
   );
 }
-git add .
-git commit -m "Add Havenly PageLoader"
-git push

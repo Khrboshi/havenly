@@ -1,39 +1,16 @@
-import Link from "next/link";
-import Image from "next/image";
-
-export default function Header() {
+import Link from 'next/link'
+export default function Header(){
   return (
-    <header className="bg-white border-b border-slate-200 sticky top-0 z-50">
-      <div className="max-w-5xl mx-auto px-6 flex items-center justify-between py-4">
-        <Link href="/" className="flex items-center gap-2">
-          <Image
-            src="/logo.png"
-            alt="Havenly logo"
-            width={32}
-            height={32}
-            priority
-          />
-          <span className="text-lg font-semibold text-slate-800">Havenly</span>
-        </Link>
-
-        <nav className="flex gap-6 text-slate-600 text-sm sm:text-base">
-          <Link href="/rooms" className="hover:text-blue-600 transition">
-            Spaces
-          </Link>
-          <Link href="/community" className="hover:text-blue-600 transition">
-            Community
-          </Link>
-          <Link href="/history" className="hover:text-blue-600 transition">
-            My Reflections
-          </Link>
-          <Link href="/premium" className="hover:text-blue-600 transition">
-            Premium
-          </Link>
-          <Link href="/privacy" className="hover:text-blue-600 transition">
-            Privacy
-          </Link>
+    <header className="site-header">
+      <div className="inner">
+        <Link href="/"><a className="brand">Havenly</a></Link>
+        <nav>
+          <Link href="/reflect"><a>Reflect</a></Link>
+          <Link href="/rooms"><a>Spaces</a></Link>
+          <Link href="/community"><a>Community</a></Link>
+          <Link href="/premium"><a>Premium</a></Link>
         </nav>
       </div>
     </header>
-  );
+  )
 }

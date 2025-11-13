@@ -19,10 +19,6 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
-}
-
-/* Safe Area (for iOS notch devices) */
-body {
   padding-top: env(safe-area-inset-top);
   padding-bottom: env(safe-area-inset-bottom);
   padding-left: env(safe-area-inset-left);
@@ -80,7 +76,6 @@ a {
   @apply transition-colors duration-200;
 }
 
-/* Animated underline for hover links */
 a.underline-hover {
   position: relative;
 }
@@ -128,7 +123,7 @@ a.underline-hover:hover::after {
 }
 
 /* ------------------------------------
-   Input Fields
+   Inputs
 ------------------------------------ */
 .input {
   @apply w-full px-4 py-3 rounded-xl border border-slate-300 bg-white/80 backdrop-blur-sm shadow-inner text-slate-800 focus:border-primary focus:ring-2 focus:ring-primary/30 outline-none transition-all duration-200;
@@ -187,12 +182,11 @@ textarea.input {
   @apply text-primary font-semibold;
 }
 
-/* Mobile Nav Overlay */
+/* Mobile menu overlay */
 .nav-menu {
   @apply fixed inset-0 bg-slate-900/90 backdrop-blur-md flex flex-col items-center justify-center space-y-6 text-white text-lg transition-all duration-300;
 }
 
-/* Footer */
 .footer {
   @apply text-center text-slate-500 text-sm py-8 border-t border-slate-200;
 }
@@ -213,10 +207,6 @@ textarea.input {
   animation: slide-in 0.35s ease-out;
 }
 
-.fade-in {
-  animation: fade-in 0.4s ease-in-out;
-}
-
 @keyframes fade-in {
   from {
     opacity: 0;
@@ -228,8 +218,31 @@ textarea.input {
   }
 }
 
-.scale-tap:active {
-  transform: scale(0.97);
+.fade-in {
+  animation: fade-in 0.4s ease-in-out;
+}
+
+/* ------------------------------------
+   Skeleton Shimmer Animation
+------------------------------------ */
+@keyframes shimmer {
+  0% {
+    background-position: -468px 0;
+  }
+  100% {
+    background-position: 468px 0;
+  }
+}
+
+.skeleton-shimmer {
+  background: linear-gradient(
+    to right,
+    rgba(148, 163, 184, 0.15) 8%,
+    rgba(148, 163, 184, 0.25) 18%,
+    rgba(148, 163, 184, 0.15) 33%
+  );
+  background-size: 800px 104px;
+  animation: shimmer 1.25s linear infinite;
 }
 
 /* ------------------------------------
@@ -294,22 +307,4 @@ textarea.input {
   ::-webkit-scrollbar-thumb:hover {
     background: rgba(148, 163, 184, 0.5);
   }
-}
-@keyframes shimmer {
-  0% {
-    background-position: -468px 0;
-  }
-  100% {
-    background-position: 468px 0;
-  }
-
-.skeleton-shimmer {
-  background: linear-gradient(
-    to right,
-    rgba(148, 163, 184, 0.15) 8%,
-    rgba(148, 163, 184, 0.25) 18%,
-    rgba(148, 163, 184, 0.15) 33%
-  );
-  background-size: 800px 104px;
-  animation: shimmer 1.25s linear infinite;
 }

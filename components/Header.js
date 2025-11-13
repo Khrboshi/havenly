@@ -67,9 +67,9 @@ export default function Header() {
       <AnimatePresence>
         {open && (
           <>
-            {/* Background Overlay */}
+            {/* Dark Blurred Background Overlay */}
             <motion.div
-              className="fixed inset-0 bg-black/40 backdrop-blur-sm z-40"
+              className="fixed inset-0 bg-slate-900/60 backdrop-blur-md z-40"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
@@ -78,13 +78,13 @@ export default function Header() {
 
             {/* Slide-in Drawer */}
             <motion.div
-              className="fixed right-0 top-0 w-4/5 h-full bg-gradient-to-b from-blue-50 via-white to-slate-50 shadow-2xl z-50 flex flex-col p-6 rounded-l-2xl"
+              className="fixed right-0 top-0 w-[80%] h-full bg-gradient-to-b from-slate-100 via-white to-slate-200 shadow-2xl z-50 flex flex-col p-6 rounded-l-3xl border-l border-slate-300"
               initial={{ x: "100%" }}
               animate={{ x: 0 }}
               exit={{ x: "100%" }}
-              transition={{ type: "spring", stiffness: 180, damping: 22 }}
+              transition={{ type: "spring", stiffness: 160, damping: 22 }}
             >
-              {/* Drawer Header */}
+              {/* Header inside Drawer */}
               <div className="flex justify-between items-center mb-6">
                 <span className="text-xl font-semibold text-slate-800">
                   Havenly Menu
@@ -97,17 +97,17 @@ export default function Header() {
                 </button>
               </div>
 
-              {/* Navigation Links */}
+              {/* Navigation Items */}
               <nav className="flex flex-col gap-3">
                 {links.map((link) => (
                   <Link
                     key={link.href}
                     href={link.href}
                     onClick={closeMenu}
-                    className={`block py-3 px-4 rounded-xl text-lg font-medium transition-all ${
+                    className={`block py-3 px-5 rounded-xl text-lg font-medium transition-all shadow-sm ${
                       router.pathname === link.href
-                        ? "bg-blue-100 text-blue-700 shadow-inner border border-blue-200"
-                        : "text-slate-700 hover:bg-slate-100"
+                        ? "bg-blue-100 text-blue-700 border border-blue-300 shadow-inner"
+                        : "bg-white/90 text-slate-700 hover:bg-blue-50 hover:shadow-md"
                     }`}
                   >
                     {link.label}
@@ -115,9 +115,9 @@ export default function Header() {
                 ))}
               </nav>
 
-              {/* Bottom Footer / Close */}
-              <div className="mt-auto pt-8 border-t border-slate-200 text-center text-slate-500 text-sm">
-                © {new Date().getFullYear()} Havenly
+              {/* Footer Info */}
+              <div className="mt-auto pt-10 text-center text-slate-500 text-sm border-t border-slate-300">
+                Havenly © {new Date().getFullYear()} — Calm begins here.
               </div>
             </motion.div>
           </>

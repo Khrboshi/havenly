@@ -1,22 +1,32 @@
 [
-  {
-    "id": 1,
-    "category": "Mindfulness",
-    "prompt": "What is one small thing you can appreciate about today?"
-  },
-  {
-    "id": 2,
-    "category": "Growth",
-    "prompt": "What challenge recently taught you something valuable?"
-  },
-  {
-    "id": 3,
-    "category": "Gratitude",
-    "prompt": "Who made your day better recently, and why?"
-  },
-  {
-    "id": 4,
-    "category": "Reflection",
-    "prompt": "What emotion are you holding onto that you could release?"
-  }
+  "What brought you a moment of calm today?",
+  "What are you grateful for right now?",
+  "When did you feel most connected with yourself?",
+  "What challenged your patience today?",
+  "Who or what inspired you recently?",
+  "What emotion do you want to release?",
+  "What is something small that made you smile?",
+  "How did you take care of your mind today?",
+  "What lesson did today quietly teach you?",
+  "What would you tell yourself a year ago?",
+  "When did you feel proud of yourself today?",
+  "What’s something beautiful you noticed?",
+  "How did you practice kindness today?",
+  "What gave you energy or peace?",
+  "What is one thing you’d like to let go of?",
+  "When did you feel supported today?",
+  "What made you laugh or feel joy?",
+  "What are you looking forward to tomorrow?",
+  "How did you challenge a negative thought?",
+  "What does self-care look like for you today?",
+  "Describe one thing that felt meaningful.",
+  "What are you learning about yourself?",
+  "What moment felt most alive?",
+  "How did you show compassion today?",
+  "What are you thankful your body allowed you to do?",
+  "What moment are you proud of today?",
+  "What helped you feel grounded?",
+  "What do you need to forgive yourself for?",
+  "What intention will you set for tomorrow?",
+  "What was today’s quiet victory?"
 ]

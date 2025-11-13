@@ -4,6 +4,12 @@ export default function Document() {
   return (
     <Html lang="en">
       <Head>
+        {/* --- Viewport (Enables Zoom & Pan) --- */}
+        <meta
+          name="viewport"
+          content="width=device-width, initial-scale=1, maximum-scale=5, user-scalable=yes, viewport-fit=cover"
+        />
+
         {/* --- Basic Metadata --- */}
         <meta charSet="utf-8" />
         <meta
@@ -20,7 +26,7 @@ export default function Document() {
         <link rel="icon" href="/favicon.ico" />
         <link rel="apple-touch-icon" href="/logo.png" />
 
-        {/* --- Open Graph (for Facebook / LinkedIn) --- */}
+        {/* --- Open Graph --- */}
         <meta property="og:type" content="website" />
         <meta property="og:site_name" content="Havenly" />
         <meta property="og:title" content="Havenly — Mindful Reflection Journal" />
@@ -41,7 +47,7 @@ export default function Document() {
         />
         <meta name="twitter:image" content="https://havenly.vercel.app/og-image.png" />
 
-        {/* --- Schema.org (JSON-LD Structured Data) --- */}
+        {/* --- Schema.org Structured Data --- */}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
@@ -67,24 +73,7 @@ export default function Document() {
           }}
         />
       </Head>
-      <body className="bg-slate-50 text-slate-800">
-        <Main />
-        <NextScript />
-      </body>
-    </Html>
-  );
-}
-import { Html, Head, Main, NextScript } from "next/document";
 
-export default function Document() {
-  return (
-    <Html lang="en">
-      <Head>
-        <meta
-          name="viewport"
-          content="width=device-width, initial-scale=1, maximum-scale=5, user-scalable=yes, viewport-fit=cover"
-        />
-      </Head>
       <body className="bg-slate-50 text-slate-800 font-sans antialiased">
         <Main />
         <NextScript />

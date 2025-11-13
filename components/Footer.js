@@ -1,14 +1,10 @@
-export default function Footer(){
+export default function Footer() {
   return (
-    <footer className="site-footer">
-      <div className="inner">
-        <small>Built for stillness in a noisy world — Havenly</small>
-        <div className="links">
-          <a href="/about">About</a>
-          <a href="/privacy">Privacy</a>
-          <a href="/contact">Contact</a>
-        </div>
+    <footer className="mt-16">
+      <div className="max-w-5xl mx-auto px-6 py-10 text-center text-slate-500 text-sm">
+        <p>© {new Date().getFullYear()} Havenly — A quiet space for mindful reflection — every day.</p>
+        <p className="mt-2">Built with Next.js & Tailwind CSS · Deployed on Vercel</p>
       </div>
     </footer>
-  )
+  );
 }

@@ -2,21 +2,34 @@
 @tailwind components;
 @tailwind utilities;
 
-/* General base styling */
-body {
-  @apply bg-slate-50 text-slate-800 font-sans antialiased;
+/* ------------------------------------
+   Global Base Styles
+------------------------------------ */
+html, body {
+  overscroll-behavior: none;
+  touch-action: pan-x pan-y pinch-zoom;
   scroll-behavior: smooth;
+  max-width: 100%;
 }
 
+body {
+  @apply bg-slate-50 text-slate-800 font-sans antialiased;
+  overflow-x: hidden; /* safer than auto — prevents horizontal bar flicker */
+}
+
+/* Headings */
 h1, h2, h3, h4 {
   @apply font-display text-slate-900;
 }
 
+/* Links */
 a {
   @apply transition-colors duration-200;
 }
 
-/* Button Styles */
+/* ------------------------------------
+   Buttons
+------------------------------------ */
 .btn-primary {
   @apply bg-primary text-white px-6 py-3 rounded-full font-semibold shadow-soft hover:shadow-glow transition-all duration-300;
 }
@@ -25,12 +38,16 @@ a {
   @apply border border-primary text-primary px-6 py-3 rounded-full font-semibold hover:bg-primary hover:text-white transition-all duration-300;
 }
 
-/* Cards and Containers */
+/* ------------------------------------
+   Cards and Containers
+------------------------------------ */
 .card {
   @apply bg-white/80 backdrop-blur-sm border border-slate-200 rounded-2xl shadow-soft p-6;
 }
 
-/* Smooth link hover underlines */
+/* ------------------------------------
+   Hover Underline Animation
+------------------------------------ */
 a.underline-hover {
   position: relative;
 }
@@ -49,6 +66,10 @@ a.underline-hover::after {
 a.underline-hover:hover::after {
   width: 100%;
 }
+
+/* ------------------------------------
+   Animations
+------------------------------------ */
 @keyframes slide-in {
   from {
     transform: translateX(100%);
@@ -59,4 +80,32 @@ a.underline-hover:hover::after {
 }
 .animate-slide-in {
   animation: slide-in 0.35s ease-out;
+}
+
+/* ------------------------------------
+   Fixed Navigation (prevent accidental pan)
+------------------------------------ */
+nav.fixed {
+  touch-action: none;
+}
+
+/* ------------------------------------
+   (Optional) Light/Dark Auto Theme Support
+------------------------------------ */
+@media (prefers-color-scheme: dark) {
+  body {
+    @apply bg-slate-900 text-slate-100;
+  }
+
+  .card {
+    @apply bg-slate-800/70 border-slate-700;
+  }
+
+  .btn-primary {
+    @apply bg-blue-500 hover:bg-blue-600;
+  }
+
+  .btn-secondary {
+    @apply border-blue-400 text-blue-300 hover:bg-blue-600 hover:text-white;
+  }
 }

@@ -7,12 +7,16 @@ import { motion } from "framer-motion";
 import OnboardingModal from "@/components/OnboardingModal";
 import ReferralBanner from "@/components/ReferralBanner";
 import UpgradeBanner from "@/components/UpgradeBanner";
-import DailyPrompt from "@/components/DailyPrompt"; // ✅ import here
+import DailyPrompt from "@/components/DailyPrompt";
+import { logEvent } from "@/utils/analytics"; // ✅ NEW analytics import
 
 export default function Home() {
   const [showOnboard, setShowOnboard] = useState(false);
 
   useEffect(() => {
+    // ✅ Track homepage view
+    logEvent("home_page_view");
+
     if (typeof window !== "undefined") {
       const done = localStorage.getItem("onboardingCompleted");
       if (!done) setShowOnboard(true);
@@ -22,6 +26,7 @@ export default function Home() {
   const finishOnboard = () => {
     localStorage.setItem("onboardingCompleted", "true");
     setShowOnboard(false);
+    logEvent("onboarding_completed");
   };
 
   return (
@@ -54,10 +59,19 @@ export default function Home() {
         </p>
 
         <div className="flex flex-col sm:flex-row justify-center gap-4">
-          <Link href="/rooms" className="btn-primary">
+          <Link
+            href="/rooms"
+            onClick={() => logEvent("start_reflection_click")}
+            className="btn-primary"
+          >
             Start My Reflection
           </Link>
-          <Link href="/premium" className="btn-secondary">
+
+          <Link
+            href="/premium"
+            onClick={() => logEvent("explore_premium_click")}
+            className="btn-secondary"
+          >
             Explore Premium
           </Link>
         </div>
@@ -67,9 +81,10 @@ export default function Home() {
         </div>
       </motion.section>
 
-      {/* ✅ Daily Prompt appears below hero */}
+      {/* ✅ Daily prompt below hero */}
       <DailyPrompt />
 
+      {/* BANNERS + MODAL */}
       <ReferralBanner />
       <UpgradeBanner />
       {showOnboard && <OnboardingModal onFinish={finishOnboard} />}

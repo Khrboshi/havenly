@@ -5,7 +5,8 @@
 /* ------------------------------------
    Global Base Styles
 ------------------------------------ */
-html, body {
+html,
+body {
   overscroll-behavior: none;
   touch-action: pan-x pan-y pinch-zoom;
   scroll-behavior: smooth;
@@ -14,106 +15,23 @@ html, body {
 
 body {
   @apply bg-slate-50 text-slate-800 font-sans antialiased;
-  overflow-x: hidden; /* safer than auto — prevents horizontal bar flicker */
+  overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
 }
 
-/* Headings */
-h1, h2, h3, h4 {
-  @apply font-display text-slate-900;
-}
-
-/* Links */
-a {
-  @apply transition-colors duration-200;
-}
-
-/* ------------------------------------
-   Buttons
------------------------------------- */
-.btn-primary {
-  @apply bg-primary text-white px-6 py-3 rounded-full font-semibold shadow-soft hover:shadow-glow transition-all duration-300;
-}
-
-.btn-secondary {
-  @apply border border-primary text-primary px-6 py-3 rounded-full font-semibold hover:bg-primary hover:text-white transition-all duration-300;
+/* Safe Area (for iOS notch devices) */
+body {
+  padding-top: env(safe-area-inset-top);
+  padding-bottom: env(safe-area-inset-bottom);
+  padding-left: env(safe-area-inset-left);
+  padding-right: env(safe-area-inset-right);
 }
 
 /* ------------------------------------
-   Cards and Containers
+   Typography — Fluid & Responsive
 ------------------------------------ */
-.card {
-  @apply bg-white/80 backdrop-blur-sm border border-slate-200 rounded-2xl shadow-soft p-6;
-}
-
-/* ------------------------------------
-   Hover Underline Animation
------------------------------------- */
-a.underline-hover {
-  position: relative;
-}
-
-a.underline-hover::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  bottom: -2px;
-  width: 0;
-  height: 2px;
-  background: theme('colors.primary.DEFAULT');
-  transition: width 0.3s ease;
-}
-
-a.underline-hover:hover::after {
-  width: 100%;
-}
-
-/* ------------------------------------
-   Animations
------------------------------------- */
-@keyframes slide-in {
-  from {
-    transform: translateX(100%);
-  }
-  to {
-    transform: translateX(0%);
-  }
-}
-.animate-slide-in {
-  animation: slide-in 0.35s ease-out;
-}
-
-/* ------------------------------------
-   Fixed Navigation (prevent accidental pan)
------------------------------------- */
-nav.fixed {
-  touch-action: none;
-}
-
-/* ------------------------------------
-   (Optional) Light/Dark Auto Theme Support
------------------------------------- */
-@media (prefers-color-scheme: dark) {
-  body {
-    @apply bg-slate-900 text-slate-100;
-  }
-
-  .card {
-    @apply bg-slate-800/70 border-slate-700;
-  }
-
-  .btn-primary {
-    @apply bg-blue-500 hover:bg-blue-600;
-  }
-
-  .btn-secondary {
-    @apply border-blue-400 text-blue-300 hover:bg-blue-600 hover:text-white;
-  }
-}
-
-/* --- Fluid Typography & Layout Scaling --- */
 :root {
   --fluid-min: 1rem;
   --fluid-max: 1.125rem;
@@ -127,11 +45,9 @@ nav.fixed {
     (var(--fluid-min) * 1rem) +
       (var(--fluid-max) - var(--fluid-min)) * var(--fluid-bp)
   );
-
   font-size: var(--fluid-font-size);
 }
 
-/* Headings — scale progressively with screen size */
 h1 {
   font-size: clamp(2rem, 4vw + 1rem, 3.25rem);
   line-height: 1.15;
@@ -149,40 +65,175 @@ h3 {
   font-weight: 600;
 }
 
-p, li, a, span {
+p,
+li,
+a,
+span {
   font-size: clamp(0.95rem, 1vw + 0.5rem, 1.125rem);
   line-height: 1.6;
 }
 
-/* Container padding adjusts fluidly */
-.container-fluid {
-  padding-left: clamp(1rem, 4vw, 4rem);
-  padding-right: clamp(1rem, 4vw, 4rem);
-}
-
-/* Fluid spacing utilities (custom) */
-.section {
-  padding-top: clamp(2rem, 6vw, 6rem);
-  padding-bottom: clamp(2rem, 6vw, 6rem);
-}
-
-/* Soften transitions */
-* {
-  transition: color 0.3s ease, background-color 0.3s ease, border-color 0.3s ease;
-}
-
 /* ------------------------------------
-   Mobile Safe Area Padding (iOS notch support)
+   Links
 ------------------------------------ */
-body {
-  padding-top: env(safe-area-inset-top);
-  padding-bottom: env(safe-area-inset-bottom);
-  padding-left: env(safe-area-inset-left);
-  padding-right: env(safe-area-inset-right);
+a {
+  @apply transition-colors duration-200;
+}
+
+/* Animated underline for hover links */
+a.underline-hover {
+  position: relative;
+}
+
+a.underline-hover::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -2px;
+  width: 0;
+  height: 2px;
+  background: theme("colors.primary.DEFAULT");
+  transition: width 0.3s ease;
+}
+
+a.underline-hover:hover::after {
+  width: 100%;
 }
 
 /* ------------------------------------
-   Global Selection & Scrollbar
+   Buttons
+------------------------------------ */
+.btn {
+  @apply inline-flex items-center justify-center font-medium rounded-full transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2;
+}
+
+.btn-primary {
+  @apply bg-primary text-white px-6 py-3 shadow-soft hover:shadow-glow hover:bg-primary-dark focus:ring-primary;
+}
+
+.btn-secondary {
+  @apply border border-primary text-primary px-6 py-3 hover:bg-primary hover:text-white focus:ring-primary;
+}
+
+.btn-ghost {
+  @apply text-slate-600 hover:text-primary px-4 py-2;
+}
+
+.btn-sm {
+  @apply text-sm px-4 py-2;
+}
+
+.btn-lg {
+  @apply text-lg px-8 py-4;
+}
+
+/* ------------------------------------
+   Input Fields
+------------------------------------ */
+.input {
+  @apply w-full px-4 py-3 rounded-xl border border-slate-300 bg-white/80 backdrop-blur-sm shadow-inner text-slate-800 focus:border-primary focus:ring-2 focus:ring-primary/30 outline-none transition-all duration-200;
+}
+
+textarea.input {
+  @apply resize-none min-h-[120px];
+}
+
+/* ------------------------------------
+   Cards
+------------------------------------ */
+.card {
+  @apply bg-white/90 backdrop-blur-sm border border-slate-200 rounded-2xl shadow-soft p-6 transition-all duration-300 hover:shadow-glow;
+}
+
+.card-header {
+  @apply mb-3 text-xl font-semibold text-slate-900;
+}
+
+.card-content {
+  @apply text-slate-700 leading-relaxed;
+}
+
+.card-footer {
+  @apply mt-4 text-right;
+}
+
+/* ------------------------------------
+   Modal
+------------------------------------ */
+.modal-overlay {
+  @apply fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center z-50 opacity-0 pointer-events-none transition-opacity duration-300;
+}
+
+.modal-overlay.active {
+  @apply opacity-100 pointer-events-auto;
+}
+
+.modal {
+  @apply bg-white rounded-2xl p-8 max-w-lg w-[90%] shadow-lg animate-slide-in;
+}
+
+/* ------------------------------------
+   Navigation & Footer
+------------------------------------ */
+.navbar {
+  @apply flex items-center justify-between py-4 px-6 sticky top-0 bg-white/80 backdrop-blur-md border-b border-slate-200 z-40 shadow-sm;
+}
+
+.nav-link {
+  @apply text-slate-700 hover:text-primary transition-colors duration-200 px-3 py-2 font-medium;
+}
+
+.nav-link.active {
+  @apply text-primary font-semibold;
+}
+
+/* Mobile Nav Overlay */
+.nav-menu {
+  @apply fixed inset-0 bg-slate-900/90 backdrop-blur-md flex flex-col items-center justify-center space-y-6 text-white text-lg transition-all duration-300;
+}
+
+/* Footer */
+.footer {
+  @apply text-center text-slate-500 text-sm py-8 border-t border-slate-200;
+}
+
+/* ------------------------------------
+   Animations
+------------------------------------ */
+@keyframes slide-in {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0%);
+  }
+}
+
+.animate-slide-in {
+  animation: slide-in 0.35s ease-out;
+}
+
+.fade-in {
+  animation: fade-in 0.4s ease-in-out;
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.scale-tap:active {
+  transform: scale(0.97);
+}
+
+/* ------------------------------------
+   Selection & Scrollbars
 ------------------------------------ */
 ::selection {
   background: #3b82f6;
@@ -203,7 +254,34 @@ body {
   background: rgba(100, 116, 139, 0.5);
 }
 
+/* ------------------------------------
+   Dark Mode (auto-detected)
+------------------------------------ */
 @media (prefers-color-scheme: dark) {
+  body {
+    @apply bg-slate-900 text-slate-100;
+  }
+
+  .card {
+    @apply bg-slate-800/70 border-slate-700;
+  }
+
+  .btn-primary {
+    @apply bg-blue-500 hover:bg-blue-600;
+  }
+
+  .btn-secondary {
+    @apply border-blue-400 text-blue-300 hover:bg-blue-600 hover:text-white;
+  }
+
+  .navbar {
+    @apply bg-slate-900/70 border-slate-800;
+  }
+
+  .footer {
+    @apply border-slate-700 text-slate-400;
+  }
+
   ::selection {
     background: #60a5fa;
     color: #0f172a;

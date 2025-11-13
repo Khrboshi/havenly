@@ -7,7 +7,7 @@ import { useState, useEffect } from "react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import PremiumNudge from "@/components/PremiumNudge";
-import DailyNudge from "@/components/DailyNudge"; // ✅ added
+import DailyNudge from "@/components/DailyNudge";
 import PageLoader from "@/components/PageLoader";
 import OnboardingFlow from "@/components/OnboardingFlow";
 
@@ -16,7 +16,7 @@ export default function App({ Component, pageProps }) {
   const [loading, setLoading] = useState(false);
   const [showOnboarding, setShowOnboarding] = useState(false);
 
-  // ✅ Handle route transitions
+  // ✅ Route transition loader
   useEffect(() => {
     const handleStart = () => setLoading(true);
     const handleStop = () => setTimeout(() => setLoading(false), 300);
@@ -32,25 +32,31 @@ export default function App({ Component, pageProps }) {
     };
   }, [router]);
 
-  // ✅ Show onboarding on first visit
+  // ✅ Onboarding for first-time users
   useEffect(() => {
     const hasSeen = localStorage.getItem("hasSeenOnboarding");
     if (!hasSeen) setShowOnboarding(true);
   }, []);
 
+  // ✅ Ambient breathing background
+  useEffect(() => {
+    document.body.classList.add("flow-enabled");
+    return () => document.body.classList.remove("flow-enabled");
+  }, []);
+
   return (
     <>
-      {/* Onboarding overlay (first-time users) */}
+      {/* First-time onboarding overlay */}
       {showOnboarding && (
         <OnboardingFlow onFinish={() => setShowOnboarding(false)} />
       )}
 
       <Header />
 
-      {/* Page loader on route change */}
+      {/* Route loader animation */}
       <AnimatePresence>{loading && <PageLoader />}</AnimatePresence>
 
-      {/* Animated route transitions */}
+      {/* Smooth page transitions */}
       <AnimatePresence mode="wait" initial={false}>
         <motion.main
           key={router.asPath}
@@ -63,12 +69,12 @@ export default function App({ Component, pageProps }) {
           }}
           className="min-h-screen flex flex-col justify-between"
         >
-          {/* Main content */}
+          {/* Dynamic content */}
           <Component {...pageProps} />
 
-          {/* Engagement hooks */}
+          {/* Engagement micro-interactions */}
           <PremiumNudge />
-          <DailyNudge /> {/* ✅ integrated nudge */}
+          <DailyNudge />
         </motion.main>
       </AnimatePresence>
 

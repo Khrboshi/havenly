@@ -1,58 +1,57 @@
+// /components/DailyNudge.jsx
 "use client";
 
 import { useEffect, useState } from "react";
-import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, PenLine } from "lucide-react";
+import Link from "next/link";
 
 export default function DailyNudge() {
   const [show, setShow] = useState(false);
 
   useEffect(() => {
-    const last = localStorage.getItem("lastReflectionDate");
-    if (!last) return setShow(true); // never reflected before
-
-    const diff = Date.now() - new Date(last).getTime();
-    if (diff > 24 * 60 * 60 * 1000) setShow(true); // more than 24h
+    const lastVisit = localStorage.getItem("lastReflectionDate");
+    const today = new Date().toDateString();
+    if (lastVisit !== today) {
+      const timeout = setTimeout(() => setShow(true), 5000);
+      return () => clearTimeout(timeout);
+    }
   }, []);
 
-  const dismiss = () => setShow(false);
+  const handleDismiss = () => {
+    setShow(false);
+  };
 
   return (
     <AnimatePresence>
       {show && (
         <motion.div
-          initial={{ opacity: 0, y: 25 }}
+          initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: 25 }}
-          transition={{ duration: 0.4, ease: "easeOut" }}
-          className="fixed bottom-5 left-1/2 -translate-x-1/2 z-50 flex items-center justify-between gap-3 bg-white/90 dark:bg-slate-800/90 border border-slate-200 dark:border-slate-700 backdrop-blur-md px-5 py-3 rounded-2xl shadow-xl w-[90%] max-w-md"
+          exit={{ opacity: 0, y: 20 }}
+          transition={{ duration: 0.6, ease: "easeOut" }}
+          className="fixed bottom-5 right-5 sm:right-8 z-50"
         >
-          <div className="flex items-center gap-2 text-slate-700 dark:text-slate-200">
-            <PenLine className="text-blue-500" size={20} />
-            <p className="text-sm md:text-base">
-              It’s been a while since your last reflection. Want to write now?
-            </p>
-          </div>
+          <div className="bg-gradient-to-r from-blue-500 to-indigo-500 text-white rounded-2xl shadow-lg p-5 w-[90vw] sm:w-80 backdrop-blur-md relative">
+            <button
+              onClick={handleDismiss}
+              className="absolute top-2 right-3 text-white/70 hover:text-white text-lg leading-none"
+              aria-label="Close reminder"
+            >
+              ×
+            </button>
 
-          <div className="flex items-center gap-2">
+            <h4 className="text-lg font-semibold mb-1">Pause and Reflect</h4>
+            <p className="text-sm mb-4 text-white/90">
+              Haven’t written today? Take two minutes to capture one thought —
+              even a few words matter.
+            </p>
             <Link
               href="/reflect"
-              className="btn-primary text-sm px-4 py-2"
-              onClick={() => {
-                localStorage.setItem("lastReflectionDate", new Date().toISOString());
-                setShow(false);
-              }}
+              className="inline-block bg-white text-blue-600 font-semibold px-4 py-2 rounded-full hover:bg-blue-50 transition"
+              onClick={() => setShow(false)}
             >
-              Yes
+              Start Reflection
             </Link>
-            <button
-              onClick={dismiss}
-              aria-label="Dismiss nudge"
-              className="text-slate-400 hover:text-slate-600 dark:text-slate-500 dark:hover:text-slate-300 transition"
-            >
-              <X size={18} />
-            </button>
           </div>
         </motion.div>
       )}

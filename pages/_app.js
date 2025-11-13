@@ -10,16 +10,29 @@ import PremiumNudge from "@/components/PremiumNudge";
 import DailyNudge from "@/components/DailyNudge";
 import PageLoader from "@/components/PageLoader";
 import OnboardingFlow from "@/components/OnboardingFlow";
+import { initAnalytics, logEvent } from "@/utils/analytics"; // ✅ Analytics
 
 export default function App({ Component, pageProps }) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [showOnboarding, setShowOnboarding] = useState(false);
 
-  // ✅ Route transition loader
+  // ✅ Initialize analytics + first load tracking
   useEffect(() => {
-    const handleStart = () => setLoading(true);
-    const handleStop = () => setTimeout(() => setLoading(false), 300);
+    initAnalytics();
+    logEvent("app_loaded");
+  }, []);
+
+  // ✅ Track route transitions
+  useEffect(() => {
+    const handleStart = (url) => {
+      setLoading(true);
+      logEvent("route_change_start", { to: url });
+    };
+    const handleStop = (url) => {
+      setTimeout(() => setLoading(false), 300);
+      logEvent("route_change_complete", { to: url });
+    };
 
     router.events.on("routeChangeStart", handleStart);
     router.events.on("routeChangeComplete", handleStop);
@@ -46,9 +59,15 @@ export default function App({ Component, pageProps }) {
 
   return (
     <>
-      {/* First-time onboarding overlay */}
+      {/* Onboarding overlay */}
       {showOnboarding && (
-        <OnboardingFlow onFinish={() => setShowOnboarding(false)} />
+        <OnboardingFlow
+          onFinish={() => {
+            setShowOnboarding(false);
+            localStorage.setItem("hasSeenOnboarding", "true");
+            logEvent("onboarding_completed");
+          }}
+        />
       )}
 
       <Header />
@@ -56,7 +75,7 @@ export default function App({ Component, pageProps }) {
       {/* Route loader animation */}
       <AnimatePresence>{loading && <PageLoader />}</AnimatePresence>
 
-      {/* Smooth page transitions */}
+      {/* Smooth route transitions */}
       <AnimatePresence mode="wait" initial={false}>
         <motion.main
           key={router.asPath}
@@ -72,9 +91,13 @@ export default function App({ Component, pageProps }) {
           {/* Dynamic content */}
           <Component {...pageProps} />
 
-          {/* Engagement micro-interactions */}
-          <PremiumNudge />
-          <DailyNudge />
+          {/* Engagement hooks */}
+          <PremiumNudge
+            onClick={() => logEvent("user_clicked_premium")}
+          />
+          <DailyNudge
+            onComplete={() => logEvent("daily_nudge_completed")}
+          />
         </motion.main>
       </AnimatePresence>
 

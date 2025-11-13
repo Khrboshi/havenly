@@ -1,158 +1,132 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { X, MoreHorizontal, Home, PenLine, BookText, LineChart, Star, Users, Info, Shield } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
-import { useRouter } from "next/router";
+import { Menu, X } from "lucide-react";
 
 export default function Header() {
-  const [openOverflow, setOpenOverflow] = useState(false);
-  const router = useRouter();
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [isDark, setIsDark] = useState(false);
 
-  // Main quick-access navigation
-  const mainLinks = [
-    { href: "/rooms", label: "Spaces", icon: <Home size={18} /> },
-    { href: "/unpack", label: "Reflect", icon: <PenLine size={18} /> },
-    { href: "/history", label: "History", icon: <BookText size={18} /> },
-    { href: "/progress", label: "Progress", icon: <LineChart size={18} /> },
+  // Detect system color scheme
+  useEffect(() => {
+    const mq = window.matchMedia("(prefers-color-scheme: dark)");
+    setIsDark(mq.matches);
+    const handler = (e) => setIsDark(e.matches);
+    mq.addEventListener("change", handler);
+    return () => mq.removeEventListener("change", handler);
+  }, []);
+
+  const toggleMenu = () => setMenuOpen(!menuOpen);
+
+  const menuItems = [
+    { href: "/rooms", label: "Spaces" },
+    { href: "/unpack", label: "Reflect" },
+    { href: "/history", label: "History" },
+    { href: "/progress", label: "Progress" },
+    { href: "/premium", label: "Premium" },
+    { href: "/community", label: "Community" },
+    { href: "/about", label: "About" },
+    { href: "/privacy", label: "Privacy" },
   ];
-
-  // Secondary navigation (less frequent actions)
-  const secondaryLinks = [
-    { href: "/premium", label: "Premium", icon: <Star size={18} /> },
-    { href: "/community", label: "Community", icon: <Users size={18} /> },
-    { href: "/about", label: "About", icon: <Info size={18} /> },
-    { href: "/privacy", label: "Privacy", icon: <Shield size={18} /> },
-  ];
-
-  const closeOverflow = () => setOpenOverflow(false);
 
   return (
-    <header className="bg-white/80 backdrop-blur border-b border-slate-200 sticky top-0 z-50">
-      {/* Desktop / Laptop Header */}
-      <div className="max-w-5xl mx-auto flex items-center justify-between px-4 py-3 md:py-4">
-        <Link href="/" className="flex items-center gap-2">
-          <Image src="/logo.png" alt="Havenly logo" width={32} height={32} priority />
-          <span className="text-xl font-semibold text-slate-800">Havenly</span>
+    <header
+      className={`sticky top-0 z-50 border-b backdrop-blur-md transition-colors duration-300 ${
+        isDark
+          ? "bg-slate-900/80 border-slate-700"
+          : "bg-white/80 border-slate-200"
+      }`}
+    >
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 flex items-center justify-between py-4">
+        {/* Logo */}
+        <Link href="/" className="flex items-center gap-2 group">
+          <Image
+            src="/logo.png"
+            alt="Havenly logo"
+            width={36}
+            height={36}
+            priority
+            className="transition-transform group-hover:scale-105"
+          />
+          <span
+            className={`text-lg font-semibold transition-colors ${
+              isDark ? "text-slate-100" : "text-slate-800"
+            }`}
+          >
+            Havenly
+          </span>
         </Link>
 
-        <nav className="hidden md:flex gap-6 items-center">
-          {[...mainLinks, ...secondaryLinks].map((link) => {
-            const active = router.pathname === link.href;
-            return (
-              <Link
-                key={link.href}
-                href={link.href}
-                className={`flex items-center gap-1.5 text-slate-700 hover:text-blue-600 transition font-medium ${
-                  active ? "text-blue-600 font-semibold" : ""
-                }`}
-              >
-                {link.icon}
-                {link.label}
-              </Link>
-            );
-          })}
-        </nav>
-
-        {/* Mobile overflow trigger */}
-        <div className="md:hidden flex items-center gap-4">
-          <button
-            onClick={() => setOpenOverflow(true)}
-            aria-label="More menu"
-            className="text-slate-700 hover:text-blue-600"
-          >
-            <MoreHorizontal size={24} />
-          </button>
-        </div>
-      </div>
-
-      {/* Mobile Bottom Navigation */}
-      <nav
-        className="
-          fixed bottom-0 left-0 right-0 
-          bg-gradient-to-t from-white via-white/95 to-white/80
-          border-t border-slate-200 
-          md:hidden flex justify-around items-center
-          shadow-[0_-2px_8px_rgba(0,0,0,0.05)]
-          backdrop-blur
-          py-1 sm:py-2
-          pb-[max(env(safe-area-inset-bottom),0.65rem)]
-        "
-      >
-        {mainLinks.map((link) => {
-          const active = router.pathname === link.href;
-          return (
+        {/* Desktop Menu */}
+        <nav className="hidden md:flex gap-6 text-sm font-medium">
+          {menuItems.map((item) => (
             <Link
-              key={link.href}
-              href={link.href}
-              className={`flex flex-col items-center justify-center gap-1 px-2 py-1.5 rounded-lg text-[11px] sm:text-xs font-medium transition-all ${
-                active
-                  ? "bg-blue-600 text-white shadow-sm scale-105"
-                  : "text-slate-700 hover:bg-blue-50 hover:text-blue-700"
+              key={item.href}
+              href={item.href}
+              className={`transition-colors ${
+                isDark
+                  ? "text-slate-200 hover:text-blue-400"
+                  : "text-slate-600 hover:text-blue-600"
               }`}
             >
-              {link.icon}
-              <span>{link.label}</span>
+              {item.label}
             </Link>
-          );
-        })}
-      </nav>
+          ))}
+        </nav>
 
-      {/* Overflow Drawer for Secondary Links */}
-      <AnimatePresence>
-        {openOverflow && (
-          <>
-            <motion.div
-              className="fixed inset-0 bg-slate-900/50 z-40"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              onClick={closeOverflow}
+        {/* Mobile Menu Toggle */}
+        <button
+          onClick={toggleMenu}
+          aria-label="Toggle menu"
+          className="md:hidden p-2 rounded-md transition-colors"
+        >
+          {menuOpen ? (
+            <X
+              size={24}
+              className={`${
+                isDark ? "text-slate-200" : "text-slate-700"
+              } transition-transform`}
             />
-            <motion.div
-              className="fixed bottom-0 left-0 right-0 bg-white rounded-t-3xl shadow-2xl z-50 p-5 pb-[max(env(safe-area-inset-bottom),1.5rem)]"
-              initial={{ y: "100%" }}
-              animate={{ y: 0 }}
-              exit={{ y: "100%" }}
-              transition={{ duration: 0.35 }}
-            >
-              <div className="flex justify-between items-center mb-4">
-                <span className="text-lg font-semibold text-slate-800">More</span>
-                <button
-                  onClick={closeOverflow}
-                  className="text-slate-600 hover:text-blue-600"
-                  aria-label="Close menu"
-                >
-                  <X size={24} />
-                </button>
-              </div>
+          ) : (
+            <Menu
+              size={24}
+              className={`${
+                isDark ? "text-slate-200" : "text-slate-700"
+              } transition-transform`}
+            />
+          )}
+        </button>
+      </div>
 
-              <nav className="flex flex-col gap-2">
-                {secondaryLinks.map((link) => {
-                  const active = router.pathname === link.href;
-                  return (
-                    <Link
-                      key={link.href}
-                      href={link.href}
-                      onClick={closeOverflow}
-                      className={`flex items-center gap-3 px-4 py-3 rounded-lg text-base font-medium transition ${
-                        active
-                          ? "bg-blue-600 text-white shadow-sm"
-                          : "text-slate-700 hover:bg-blue-50 hover:text-blue-700"
-                      }`}
-                    >
-                      {link.icon}
-                      {link.label}
-                    </Link>
-                  );
-                })}
-              </nav>
-            </motion.div>
-          </>
-        )}
-      </AnimatePresence>
+      {/* Mobile Dropdown */}
+      {menuOpen && (
+        <div
+          className={`md:hidden animate-slide-in border-t ${
+            isDark
+              ? "bg-slate-900/95 border-slate-700 text-slate-100"
+              : "bg-white/95 border-slate-200 text-slate-800"
+          }`}
+        >
+          <nav className="flex flex-col text-center space-y-2 py-6 px-4">
+            {menuItems.map((item) => (
+              <Link
+                key={item.href}
+                href={item.href}
+                className={`py-2 text-lg rounded-full font-medium transition-all ${
+                  isDark
+                    ? "hover:bg-slate-800 hover:text-blue-400"
+                    : "hover:bg-blue-50 hover:text-blue-700"
+                }`}
+                onClick={() => setMenuOpen(false)}
+              >
+                {item.label}
+              </Link>
+            ))}
+          </nav>
+        </div>
+      )}
     </header>
   );
 }

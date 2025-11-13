@@ -1,4 +1,5 @@
 "use client";
+
 import { useState, useEffect } from "react";
 import Head from "next/head";
 import Link from "next/link";
@@ -6,6 +7,7 @@ import { motion } from "framer-motion";
 import OnboardingModal from "@/components/OnboardingModal";
 import ReferralBanner from "@/components/ReferralBanner";
 import UpgradeBanner from "@/components/UpgradeBanner";
+import DailyPrompt from "@/components/DailyPrompt"; // ✅ import here
 
 export default function Home() {
   const [showOnboard, setShowOnboard] = useState(false);
@@ -32,6 +34,7 @@ export default function Home() {
         />
       </Head>
 
+      {/* HERO SECTION */}
       <motion.section
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -63,6 +66,9 @@ export default function Home() {
           No sign-ups. No distractions. Just space to breathe.
         </div>
       </motion.section>
+
+      {/* ✅ Daily Prompt appears below hero */}
+      <DailyPrompt />
 
       <ReferralBanner />
       <UpgradeBanner />

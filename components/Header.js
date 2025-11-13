@@ -19,6 +19,14 @@ export default function Header() {
     { href: "/about", label: "About" },
   ];
 
+  const toggleMenu = (state) => {
+    // ✅ Optional haptic feedback for mobile users
+    if (typeof window !== "undefined" && "vibrate" in navigator) {
+      navigator.vibrate(10); // short vibration pulse
+    }
+    setIsOpen(state);
+  };
+
   return (
     <header className="bg-white/80 backdrop-blur border-b border-slate-200 sticky top-0 z-50">
       <div className="max-w-5xl mx-auto px-6 flex items-center justify-between py-4">
@@ -50,7 +58,7 @@ export default function Header() {
 
         {/* Mobile Menu Button */}
         <button
-          onClick={() => setIsOpen(true)}
+          onClick={() => toggleMenu(true)}
           className="md:hidden p-2 text-slate-700 hover:text-blue-600 transition"
           aria-label="Open menu"
         >
@@ -68,7 +76,7 @@ export default function Header() {
               animate={{ opacity: 0.4 }}
               exit={{ opacity: 0 }}
               className="fixed inset-0 bg-black z-40"
-              onClick={() => setIsOpen(false)}
+              onClick={() => toggleMenu(false)}
             />
 
             {/* Slide-in Drawer */}
@@ -82,7 +90,7 @@ export default function Header() {
               <div className="flex justify-between items-center p-4 border-b border-slate-200">
                 <span className="text-lg font-semibold text-slate-800">Menu</span>
                 <button
-                  onClick={() => setIsOpen(false)}
+                  onClick={() => toggleMenu(false)}
                   aria-label="Close menu"
                   className="text-slate-700 hover:text-blue-600 transition"
                 >
@@ -96,7 +104,7 @@ export default function Header() {
                     key={link.href}
                     href={link.href}
                     className="text-slate-700 text-lg hover:text-blue-600 transition"
-                    onClick={() => setIsOpen(false)}
+                    onClick={() => toggleMenu(false)}
                   >
                     {link.label}
                   </Link>

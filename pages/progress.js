@@ -7,6 +7,7 @@ import Link from "next/link";
 import { logEvent } from "@/utils/analytics";
 import StreakTracker from "@/components/StreakTracker";
 import HabitBuilder from "@/components/HabitBuilder";
+import MoodTrendChart from "@/components/MoodTrendChart"; // ✅ new import
 
 export default function Progress() {
   const [stats, setStats] = useState({
@@ -28,9 +29,7 @@ export default function Progress() {
     const now = new Date();
     const thisMonth = reflections.filter((r) => {
       const d = new Date(r.date);
-      return (
-        d.getMonth() === now.getMonth() && d.getFullYear() === now.getFullYear()
-      );
+      return d.getMonth() === now.getMonth() && d.getFullYear() === now.getFullYear();
     });
 
     const totalWords = reflections.reduce(
@@ -58,7 +57,7 @@ export default function Progress() {
         <title>Progress Snapshot — Havenly</title>
         <meta
           name="description"
-          content="See your mindfulness progress: reflection frequency, journaling streaks, and average word count."
+          content="See your mindfulness progress: reflection frequency, journaling streaks, mood trends, and average word count."
         />
       </Head>
 
@@ -81,47 +80,25 @@ export default function Progress() {
           </div>
         ) : (
           <>
+            {/* ✅ Summary cards */}
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               className="grid sm:grid-cols-2 gap-6"
             >
-              <div className="bg-white/90 backdrop-blur border border-slate-200 shadow-sm rounded-2xl p-6">
-                <h2 className="text-xl font-semibold text-slate-700 mb-2">
-                  Total Reflections
-                </h2>
-                <p className="text-4xl font-bold text-blue-600">{stats.total}</p>
-              </div>
-
-              <div className="bg-white/90 backdrop-blur border border-slate-200 shadow-sm rounded-2xl p-6">
-                <h2 className="text-xl font-semibold text-slate-700 mb-2">
-                  This Month
-                </h2>
-                <p className="text-4xl font-bold text-blue-600">
-                  {stats.thisMonth}
-                </p>
-              </div>
-
-              <div className="bg-white/90 backdrop-blur border border-slate-200 shadow-sm rounded-2xl p-6">
-                <h2 className="text-xl font-semibold text-slate-700 mb-2">
-                  Average Words
-                </h2>
-                <p className="text-4xl font-bold text-blue-600">
-                  {stats.avgWords}
-                </p>
-              </div>
-
-              <div className="bg-white/90 backdrop-blur border border-slate-200 shadow-sm rounded-2xl p-6">
-                <h2 className="text-xl font-semibold text-slate-700 mb-2">
-                  Activity Period
-                </h2>
-                <p className="text-slate-600">
-                  {new Date(stats.firstDate).toLocaleDateString()} –{" "}
-                  {new Date(stats.lastDate).toLocaleDateString()}
-                </p>
-              </div>
+              <StatCard title="Total Reflections" value={stats.total} />
+              <StatCard title="This Month" value={stats.thisMonth} />
+              <StatCard title="Average Words" value={stats.avgWords} />
+              <StatCard
+                title="Activity Period"
+                value={`${new Date(stats.firstDate).toLocaleDateString()} – ${new Date(
+                  stats.lastDate
+                ).toLocaleDateString()}`}
+                textOnly
+              />
             </motion.div>
 
+            {/* ✅ Encouragement block */}
             <motion.div
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
@@ -129,22 +106,40 @@ export default function Progress() {
               className="text-center mt-12 space-y-4"
             >
               <p className="text-slate-600">
-                Keep nurturing your calm. Every reflection counts toward greater
-                awareness.
+                Keep nurturing your calm. Every reflection counts toward greater awareness.
               </p>
               <Link href="/unpack" className="btn-primary inline-block">
                 Write a New Reflection
               </Link>
             </motion.div>
 
-            {/* ✅ Combined streak + habit challenge section */}
+            {/* ✅ Progress visualizations */}
             <div className="mt-16 max-w-md mx-auto space-y-8">
               <StreakTracker />
               <HabitBuilder />
+              <MoodTrendChart />
             </div>
           </>
         )}
       </motion.main>
     </>
+  );
+}
+
+/* ✅ Small helper for clean, reusable stat cards */
+function StatCard({ title, value, textOnly = false }) {
+  return (
+    <div className="bg-white/90 backdrop-blur border border-slate-200 shadow-sm rounded-2xl p-6">
+      <h2 className="text-xl font-semibold text-slate-700 mb-2">{title}</h2>
+      <p
+        className={`${
+          textOnly
+            ? "text-slate-600"
+            : "text-4xl font-bold text-blue-600"
+        }`}
+      >
+        {value}
+      </p>
+    </div>
   );
 }

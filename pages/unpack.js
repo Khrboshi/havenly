@@ -1,16 +1,23 @@
 "use client";
+
+import { useState, useEffect } from "react";
 import Head from "next/head";
-import { useState } from "react";
+import { motion } from "framer-motion";
+import { logEvent } from "@/utils/analytics";
 
 export default function Unpack() {
   const prompts = [
     "What moment stood out to you today?",
     "What did you learn or notice about yourself?",
-    "What would you like to release before tomorrow?",
+    "What would you like to release before tomorrow?"
   ];
 
   const [step, setStep] = useState(0);
   const [answers, setAnswers] = useState([]);
+
+  useEffect(() => {
+    logEvent("unpack_page_view");
+  }, []);
 
   const handleChange = (e) => {
     const copy = [...answers];
@@ -19,18 +26,22 @@ export default function Unpack() {
   };
 
   const next = () => {
+    logEvent("reflection_step", { step });
+
     if (step < prompts.length - 1) {
       setStep(step + 1);
     } else {
-      // Save reflection locally
       const entry = {
         text: answers.join("\n\n"),
         date: new Date().toISOString(),
       };
+
       const stored = JSON.parse(localStorage.getItem("reflections") || "[]");
       localStorage.setItem("reflections", JSON.stringify([...stored, entry]));
+
+      logEvent("reflection_saved", { words: entry.text.split(" ").length });
       alert("Reflection saved locally. Great work!");
-      // Optionally reset after saving
+
       setStep(0);
       setAnswers([]);
     }
@@ -42,32 +53,52 @@ export default function Unpack() {
         <title>Unpack — Havenly</title>
         <meta
           name="description"
-          content="Guided reflection prompts to help you process your thoughts and emotions privately."
+          content="Reflect on your day with Havenly's mindful unpack feature — guided, private, and empowering."
         />
       </Head>
 
-      <main className="max-w-xl mx-auto py-12">
-        <h1 className="text-3xl font-semibold mb-6 text-center">
+      <motion.main
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        className="max-w-2xl mx-auto py-16 px-6"
+      >
+        <h1 className="text-4xl font-semibold mb-8 text-center text-slate-800">
           Unpack Your Day
         </h1>
-        <p className="text-slate-600 mb-4 text-center">{prompts[step]}</p>
 
-        <textarea
-          value={answers[step] || ""}
-          onChange={handleChange}
-          className="w-full p-4 border border-slate-300 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none min-h-[140px]"
-          placeholder="Write your thoughts here..."
-        />
-
-        <div className="text-right mt-6">
-          <button
-            onClick={next}
-            className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-full font-medium shadow-sm transition"
+        <div className="bg-white/80 backdrop-blur border border-slate-200 rounded-2xl shadow-sm p-6">
+          <motion.p
+            key={step}
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3 }}
+            className="text-lg text-slate-700 mb-4"
           >
-            {step === prompts.length - 1 ? "Finish" : "Next"}
-          </button>
+            {prompts[step]}
+          </motion.p>
+
+          <textarea
+            value={answers[step] || ""}
+            onChange={handleChange}
+            placeholder="Write your thoughts here..."
+            className="w-full p-4 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none min-h-[140px] mb-4"
+          />
+
+          <div className="flex justify-end">
+            <button
+              onClick={next}
+              className="btn-primary"
+            >
+              {step === prompts.length - 1 ? "Finish" : "Next"}
+            </button>
+          </div>
         </div>
-      </main>
+
+        <p className="text-center text-slate-500 text-sm mt-8">
+          Your reflections are saved privately in your browser — only you can view them.
+        </p>
+      </motion.main>
     </>
   );
 }

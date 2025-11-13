@@ -4,7 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X } from "lucide-react"; // lightweight icon set
+import { Menu, X } from "lucide-react";
 
 export default function Header() {
   const [isOpen, setIsOpen] = useState(false);
@@ -50,38 +50,64 @@ export default function Header() {
 
         {/* Mobile Menu Button */}
         <button
-          onClick={() => setIsOpen(!isOpen)}
+          onClick={() => setIsOpen(true)}
           className="md:hidden p-2 text-slate-700 hover:text-blue-600 transition"
-          aria-label="Toggle menu"
+          aria-label="Open menu"
         >
-          {isOpen ? <X size={24} /> : <Menu size={24} />}
+          <Menu size={24} />
         </button>
       </div>
 
-      {/* Mobile Dropdown Menu */}
+      {/* Drawer Menu for Mobile */}
       <AnimatePresence>
         {isOpen && (
-          <motion.nav
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            transition={{ duration: 0.25 }}
-            className="md:hidden bg-white border-t border-slate-200 shadow-lg"
-          >
-            <ul className="flex flex-col items-center py-4 space-y-3">
-              {navLinks.map((link) => (
-                <li key={link.href}>
+          <>
+            {/* Overlay */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 0.4 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 bg-black z-40"
+              onClick={() => setIsOpen(false)}
+            />
+
+            {/* Slide-in Drawer */}
+            <motion.div
+              initial={{ x: "100%" }}
+              animate={{ x: 0 }}
+              exit={{ x: "100%" }}
+              transition={{ type: "spring", stiffness: 300, damping: 30 }}
+              className="fixed top-0 right-0 w-3/4 max-w-xs h-full bg-white shadow-xl z-50 flex flex-col"
+            >
+              <div className="flex justify-between items-center p-4 border-b border-slate-200">
+                <span className="text-lg font-semibold text-slate-800">Menu</span>
+                <button
+                  onClick={() => setIsOpen(false)}
+                  aria-label="Close menu"
+                  className="text-slate-700 hover:text-blue-600 transition"
+                >
+                  <X size={24} />
+                </button>
+              </div>
+
+              <nav className="flex flex-col mt-4 space-y-4 px-6">
+                {navLinks.map((link) => (
                   <Link
+                    key={link.href}
                     href={link.href}
-                    className="block text-slate-700 hover:text-blue-600 transition text-base"
+                    className="text-slate-700 text-lg hover:text-blue-600 transition"
                     onClick={() => setIsOpen(false)}
                   >
                     {link.label}
                   </Link>
-                </li>
-              ))}
-            </ul>
-          </motion.nav>
+                ))}
+              </nav>
+
+              <div className="mt-auto border-t border-slate-200 p-6 text-center text-sm text-slate-500">
+                © {new Date().getFullYear()} Havenly
+              </div>
+            </motion.div>
+          </>
         )}
       </AnimatePresence>
     </header>

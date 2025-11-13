@@ -6,6 +6,7 @@ import { motion } from "framer-motion";
 import Link from "next/link";
 import { logEvent } from "@/utils/analytics";
 import StreakTracker from "@/components/StreakTracker";
+import HabitBuilder from "@/components/HabitBuilder";
 
 export default function Progress() {
   const [stats, setStats] = useState({
@@ -41,6 +42,7 @@ export default function Progress() {
     const sorted = [...reflections].sort(
       (a, b) => new Date(a.date) - new Date(b.date)
     );
+
     setStats({
       total: reflections.length,
       thisMonth: thisMonth.length,
@@ -135,9 +137,10 @@ export default function Progress() {
               </Link>
             </motion.div>
 
-            {/* ✅ Streak tracker added below */}
-            <div className="mt-16 max-w-md mx-auto">
+            {/* ✅ Combined streak + habit challenge section */}
+            <div className="mt-16 max-w-md mx-auto space-y-8">
               <StreakTracker />
+              <HabitBuilder />
             </div>
           </>
         )}

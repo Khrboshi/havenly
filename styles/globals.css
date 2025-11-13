@@ -2,16 +2,43 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Global background + typography */
 body {
-  @apply bg-slate-50 text-slate-800 font-sans;
+  @apply bg-gradient-to-b from-blue-50 via-indigo-50 to-white text-slate-800 font-sans antialiased;
 }
 
+h1, h2, h3 {
+  @apply font-semibold text-slate-800;
+}
+
+a {
+  @apply transition-colors duration-200;
+}
+
+button {
+  @apply focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2;
+}
+
+/* Layout container */
 .container {
   @apply max-w-5xl mx-auto px-6;
 }
 
-button,
-.btn-primary,
-.btn-ghost {
-  @apply focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2;
+/* Buttons */
+.btn-primary {
+  @apply bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-full font-medium shadow-sm transition;
+}
+
+.btn-secondary {
+  @apply border border-blue-600 text-blue-600 hover:bg-blue-50 px-6 py-3 rounded-full font-medium transition;
+}
+
+/* Card */
+.card {
+  @apply bg-white border border-slate-200 rounded-2xl shadow-sm p-6;
+}
+
+/* Footer gradient */
+footer {
+  @apply bg-gradient-to-t from-blue-50 to-white border-t border-slate-200;
 }

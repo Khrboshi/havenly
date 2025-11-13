@@ -2,15 +2,16 @@
 @tailwind components;
 @tailwind utilities;
 
-/* ------------------------------------
-   Global Base Styles
------------------------------------- */
+/* -------------------------------------------------
+   Global Reset & Base
+-------------------------------------------------- */
 html,
 body {
   overscroll-behavior: none;
   touch-action: pan-x pan-y pinch-zoom;
   scroll-behavior: smooth;
   max-width: 100%;
+  -webkit-tap-highlight-color: transparent;
 }
 
 body {
@@ -25,9 +26,9 @@ body {
   padding-right: env(safe-area-inset-right);
 }
 
-/* ------------------------------------
-   Typography — Fluid & Responsive
------------------------------------- */
+/* -------------------------------------------------
+   Fluid Typography (adaptive to viewport)
+-------------------------------------------------- */
 :root {
   --fluid-min: 1rem;
   --fluid-max: 1.125rem;
@@ -44,6 +45,9 @@ body {
   font-size: var(--fluid-font-size);
 }
 
+/* -------------------------------------------------
+   Headings
+-------------------------------------------------- */
 h1 {
   font-size: clamp(2rem, 4vw + 1rem, 3.25rem);
   line-height: 1.15;
@@ -66,12 +70,12 @@ li,
 a,
 span {
   font-size: clamp(0.95rem, 1vw + 0.5rem, 1.125rem);
-  line-height: 1.6;
+  line-height: 1.65;
 }
 
-/* ------------------------------------
+/* -------------------------------------------------
    Links
------------------------------------- */
+-------------------------------------------------- */
 a {
   @apply transition-colors duration-200;
 }
@@ -95,15 +99,15 @@ a.underline-hover:hover::after {
   width: 100%;
 }
 
-/* ------------------------------------
+/* -------------------------------------------------
    Buttons
------------------------------------- */
+-------------------------------------------------- */
 .btn {
-  @apply inline-flex items-center justify-center font-medium rounded-full transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2;
+  @apply inline-flex items-center justify-center font-medium rounded-full transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 active:scale-[0.97];
 }
 
 .btn-primary {
-  @apply bg-primary text-white px-6 py-3 shadow-soft hover:shadow-glow hover:bg-primary-dark focus:ring-primary;
+  @apply bg-primary text-white px-6 py-3 shadow-md hover:shadow-lg hover:bg-primary-dark focus:ring-primary;
 }
 
 .btn-secondary {
@@ -114,17 +118,9 @@ a.underline-hover:hover::after {
   @apply text-slate-600 hover:text-primary px-4 py-2;
 }
 
-.btn-sm {
-  @apply text-sm px-4 py-2;
-}
-
-.btn-lg {
-  @apply text-lg px-8 py-4;
-}
-
-/* ------------------------------------
+/* -------------------------------------------------
    Inputs
------------------------------------- */
+-------------------------------------------------- */
 .input {
   @apply w-full px-4 py-3 rounded-xl border border-slate-300 bg-white/80 backdrop-blur-sm shadow-inner text-slate-800 focus:border-primary focus:ring-2 focus:ring-primary/30 outline-none transition-all duration-200;
 }
@@ -133,43 +129,29 @@ textarea.input {
   @apply resize-none min-h-[120px];
 }
 
-/* ------------------------------------
+/* -------------------------------------------------
    Cards
------------------------------------- */
+-------------------------------------------------- */
 .card {
-  @apply bg-white/90 backdrop-blur-sm border border-slate-200 rounded-2xl shadow-soft p-6 transition-all duration-300 hover:shadow-glow;
+  @apply bg-white/90 backdrop-blur-sm border border-slate-200 rounded-2xl shadow-sm p-6 transition-all duration-300 hover:shadow-lg;
 }
 
-.card-header {
-  @apply mb-3 text-xl font-semibold text-slate-900;
-}
-
-.card-content {
-  @apply text-slate-700 leading-relaxed;
-}
-
-.card-footer {
-  @apply mt-4 text-right;
-}
-
-/* ------------------------------------
+/* -------------------------------------------------
    Modal
------------------------------------- */
+-------------------------------------------------- */
 .modal-overlay {
   @apply fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center z-50 opacity-0 pointer-events-none transition-opacity duration-300;
 }
-
 .modal-overlay.active {
   @apply opacity-100 pointer-events-auto;
 }
-
 .modal {
-  @apply bg-white rounded-2xl p-8 max-w-lg w-[90%] shadow-lg animate-slide-in;
+  @apply bg-white rounded-2xl p-8 max-w-lg w-[90%] shadow-xl animate-slide-in;
 }
 
-/* ------------------------------------
-   Navigation & Footer
------------------------------------- */
+/* -------------------------------------------------
+   Navbar & Footer
+-------------------------------------------------- */
 .navbar {
   @apply flex items-center justify-between py-4 px-6 sticky top-0 bg-white/80 backdrop-blur-md border-b border-slate-200 z-40 shadow-sm;
 }
@@ -177,54 +159,32 @@ textarea.input {
 .nav-link {
   @apply text-slate-700 hover:text-primary transition-colors duration-200 px-3 py-2 font-medium;
 }
-
 .nav-link.active {
   @apply text-primary font-semibold;
-}
-
-/* Mobile menu overlay */
-.nav-menu {
-  @apply fixed inset-0 bg-slate-900/90 backdrop-blur-md flex flex-col items-center justify-center space-y-6 text-white text-lg transition-all duration-300;
 }
 
 .footer {
   @apply text-center text-slate-500 text-sm py-8 border-t border-slate-200;
 }
 
-/* ------------------------------------
+/* -------------------------------------------------
    Animations
------------------------------------- */
+-------------------------------------------------- */
 @keyframes slide-in {
   from {
-    transform: translateX(100%);
+    transform: translateY(20px);
+    opacity: 0;
   }
   to {
-    transform: translateX(0%);
+    transform: translateY(0);
+    opacity: 1;
   }
 }
 
 .animate-slide-in {
-  animation: slide-in 0.35s ease-out;
+  animation: slide-in 0.4s ease-out both;
 }
 
-@keyframes fade-in {
-  from {
-    opacity: 0;
-    transform: translateY(8px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.fade-in {
-  animation: fade-in 0.4s ease-in-out;
-}
-
-/* ------------------------------------
-   Skeleton Shimmer Animation
------------------------------------- */
 @keyframes shimmer {
   0% {
     background-position: -468px 0;
@@ -245,31 +205,39 @@ textarea.input {
   animation: shimmer 1.25s linear infinite;
 }
 
-/* ------------------------------------
-   Selection & Scrollbars
------------------------------------- */
-::selection {
-  background: #3b82f6;
-  color: #f8fafc;
+/* -------------------------------------------------
+   Ambient Flow Background
+-------------------------------------------------- */
+@keyframes calm-breathe {
+  0%, 100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+body.flow-enabled {
+  background: linear-gradient(270deg, #dbeafe, #e0f2fe, #e5e7eb);
+  background-size: 600% 600%;
+  animation: calm-breathe 20s ease infinite;
 }
 
-::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+/* Disable animations for reduced-motion users */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0s !important;
+    transition-duration: 0s !important;
+  }
+  body.flow-enabled {
+    animation: none;
+  }
 }
 
-::-webkit-scrollbar-thumb {
-  background: rgba(100, 116, 139, 0.3);
-  border-radius: 8px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: rgba(100, 116, 139, 0.5);
-}
-
-/* ------------------------------------
-   Dark Mode (auto-detected)
------------------------------------- */
+/* -------------------------------------------------
+   Dark Mode
+-------------------------------------------------- */
 @media (prefers-color-scheme: dark) {
   body {
     @apply bg-slate-900 text-slate-100;
@@ -295,38 +263,6 @@ textarea.input {
     @apply border-slate-700 text-slate-400;
   }
 
-  ::selection {
-    background: #60a5fa;
-    color: #0f172a;
-  }
-
-  ::-webkit-scrollbar-thumb {
-    background: rgba(148, 163, 184, 0.3);
-  }
-
-  ::-webkit-scrollbar-thumb:hover {
-    background: rgba(148, 163, 184, 0.5);
-  }
-}
-/* ------------------------------------
-   Ambient Flow Background
------------------------------------- */
-@keyframes calm-breathe {
-  0%, 100% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
-}
-
-body.flow-enabled {
-  background: linear-gradient(270deg, #dbeafe, #e0f2fe, #e5e7eb);
-  background-size: 600% 600%;
-  animation: calm-breathe 20s ease infinite;
-}
-
-@media (prefers-color-scheme: dark) {
   body.flow-enabled {
     background: linear-gradient(270deg, #1e3a8a, #0f172a, #1e293b);
     background-size: 600% 600%;

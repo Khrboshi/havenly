@@ -10,7 +10,7 @@ import PremiumNudge from "@/components/PremiumNudge";
 import DailyNudge from "@/components/DailyNudge";
 import PageLoader from "@/components/PageLoader";
 import OnboardingFlow from "@/components/OnboardingFlow";
-import { initAnalytics, logEvent } from "@/utils/analytics"; // ✅ Analytics
+import { getAnalytics, logEvent } from "@/utils/analytics"; // ✅ Correct import
 
 export default function App({ Component, pageProps }) {
   const router = useRouter();
@@ -19,7 +19,7 @@ export default function App({ Component, pageProps }) {
 
   // ✅ Initialize analytics + first load tracking
   useEffect(() => {
-    initAnalytics();
+    getAnalytics(); // ✅ initialize correctly
     logEvent("app_loaded");
   }, []);
 
@@ -92,12 +92,8 @@ export default function App({ Component, pageProps }) {
           <Component {...pageProps} />
 
           {/* Engagement hooks */}
-          <PremiumNudge
-            onClick={() => logEvent("user_clicked_premium")}
-          />
-          <DailyNudge
-            onComplete={() => logEvent("daily_nudge_completed")}
-          />
+          <PremiumNudge onClick={() => logEvent("user_clicked_premium")} />
+          <DailyNudge onComplete={() => logEvent("daily_nudge_completed")} />
         </motion.main>
       </AnimatePresence>
 

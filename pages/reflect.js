@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { CheckCircle, RefreshCw } from "lucide-react";
 import MotivationLayer from "@/components/MotivationLayer";
 import AchievementCelebration from "@/components/AchievementCelebration";
+import MilestoneToast from "@/components/MilestoneToast";
 
 export default function Reflect() {
   const prompts = [
@@ -19,11 +20,11 @@ export default function Reflect() {
   const [completed, setCompleted] = useState(false);
   const [reflectionSaved, setReflectionSaved] = useState(false);
   const [stats, setStats] = useState({ streak: 0, total: 0 });
+  const [toast, setToast] = useState({ show: false, message: "" });
 
   // ✅ Helper: calculate streak
   const calculateStreak = (reflections) => {
     if (reflections.length === 0) return 0;
-
     const sorted = [...reflections].sort(
       (a, b) => new Date(a.date) - new Date(b.date)
     );
@@ -38,7 +39,7 @@ export default function Reflect() {
     return streak;
   };
 
-  // ✅ Save reflection and update stats
+  // ✅ Save reflection and check milestones
   const saveReflection = () => {
     const entry = {
       text: answers.join("\n\n"),
@@ -48,13 +49,34 @@ export default function Reflect() {
     const stored = JSON.parse(localStorage.getItem("reflections") || "[]");
     const updated = [...stored, entry];
     localStorage.setItem("reflections", JSON.stringify(updated));
-
     localStorage.setItem("lastReflectionDate", entry.date);
 
     const total = updated.length;
     const streak = calculateStreak(updated);
     localStorage.setItem("totalReflections", total);
     localStorage.setItem("streakCount", streak);
+
+    // --- Check for new milestones ---
+    let milestone = "";
+    if (streak === 3) milestone = "🔥 Consistency Seed – 3-day streak!";
+    else if (streak === 7) milestone = "✨ Momentum Flow – 7-day streak!";
+    else if (total === 10)
+      milestone = "📘 Grounded Observer – 10 reflections!";
+    else if (total === 25)
+      milestone = "⭐ Inner Cartographer – 25 reflections!";
+    else {
+      const words = entry.text.split(/\s+/).length;
+      const totalWords = stored.reduce(
+        (sum, r) => sum + r.text.split(/\s+/).length,
+        words
+      );
+      if (totalWords >= 1000 && totalWords - words < 1000)
+        milestone = "🪶 Voice of Calm – 1,000 words written!";
+    }
+
+    if (milestone) {
+      setToast({ show: true, message: milestone });
+    }
 
     setStats({ streak, total });
     setCompleted(true);
@@ -161,7 +183,7 @@ export default function Reflect() {
           Your reflections stay private in your browser.
         </p>
 
-        {/* ✅ Motivation + Celebration layers */}
+        {/* ✅ Motivation + Celebration + Toast */}
         {reflectionSaved && <MotivationLayer />}
         {completed && (
           <AchievementCelebration
@@ -169,6 +191,11 @@ export default function Reflect() {
             total={stats.total}
           />
         )}
+        <MilestoneToast
+          message={toast.message}
+          show={toast.show}
+          onClose={() => setToast({ show: false, message: "" })}
+        />
       </motion.main>
     </>
   );

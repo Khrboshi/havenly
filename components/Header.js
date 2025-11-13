@@ -3,43 +3,39 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X } from "lucide-react";
 
 export default function Header() {
-  const [menuOpen, setMenuOpen] = useState(false);
-  const [isDark, setIsDark] = useState(false);
+  const [open, setOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
 
-  // Detect system color scheme
   useEffect(() => {
-    const mq = window.matchMedia("(prefers-color-scheme: dark)");
-    setIsDark(mq.matches);
-    const handler = (e) => setIsDark(e.matches);
-    mq.addEventListener("change", handler);
-    return () => mq.removeEventListener("change", handler);
+    const onScroll = () => setScrolled(window.scrollY > 10);
+    window.addEventListener("scroll", onScroll);
+    return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  const toggleMenu = () => setMenuOpen(!menuOpen);
-
-  const menuItems = [
+  const navLinks = [
     { href: "/rooms", label: "Spaces" },
     { href: "/unpack", label: "Reflect" },
     { href: "/history", label: "History" },
     { href: "/progress", label: "Progress" },
-    { href: "/premium", label: "Premium" },
     { href: "/community", label: "Community" },
+    { href: "/premium", label: "Premium" },
     { href: "/about", label: "About" },
     { href: "/privacy", label: "Privacy" },
   ];
 
   return (
     <header
-      className={`sticky top-0 z-50 border-b backdrop-blur-md transition-colors duration-300 ${
-        isDark
-          ? "bg-slate-900/80 border-slate-700"
-          : "bg-white/80 border-slate-200"
+      className={`fixed top-0 w-full z-50 transition-all duration-300 ${
+        scrolled
+          ? "bg-white/80 dark:bg-slate-900/80 backdrop-blur-md shadow-sm border-b border-slate-200 dark:border-slate-700"
+          : "bg-white/70 dark:bg-slate-900/70 backdrop-blur-md"
       }`}
     >
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 flex items-center justify-between py-4">
+      <div className="max-w-6xl mx-auto px-6 flex items-center justify-between h-16">
         {/* Logo */}
         <Link href="/" className="flex items-center gap-2 group">
           <Image
@@ -50,83 +46,66 @@ export default function Header() {
             priority
             className="transition-transform group-hover:scale-105"
           />
-          <span
-            className={`text-lg font-semibold transition-colors ${
-              isDark ? "text-slate-100" : "text-slate-800"
-            }`}
-          >
+          <span className="text-xl font-semibold text-slate-800 dark:text-slate-100">
             Havenly
           </span>
         </Link>
 
-        {/* Desktop Menu */}
+        {/* Desktop Nav */}
         <nav className="hidden md:flex gap-6 text-sm font-medium">
-          {menuItems.map((item) => (
+          {navLinks.map(({ href, label }) => (
             <Link
-              key={item.href}
-              href={item.href}
-              className={`transition-colors ${
-                isDark
-                  ? "text-slate-200 hover:text-blue-400"
-                  : "text-slate-600 hover:text-blue-600"
-              }`}
+              key={href}
+              href={href}
+              className="text-slate-700 dark:text-slate-200 hover:text-blue-600 dark:hover:text-blue-400 transition"
             >
-              {item.label}
+              {label}
             </Link>
           ))}
         </nav>
 
-        {/* Mobile Menu Toggle */}
+        {/* Mobile Menu Button */}
         <button
-          onClick={toggleMenu}
+          onClick={() => setOpen(!open)}
+          className="md:hidden p-2 rounded-md hover:bg-slate-200/50 dark:hover:bg-slate-700/50 transition"
           aria-label="Toggle menu"
-          className="md:hidden p-2 rounded-md transition-colors"
         >
-          {menuOpen ? (
-            <X
-              size={24}
-              className={`${
-                isDark ? "text-slate-200" : "text-slate-700"
-              } transition-transform`}
-            />
+          {open ? (
+            <X className="w-6 h-6 text-slate-800 dark:text-slate-100" />
           ) : (
-            <Menu
-              size={24}
-              className={`${
-                isDark ? "text-slate-200" : "text-slate-700"
-              } transition-transform`}
-            />
+            <Menu className="w-6 h-6 text-slate-800 dark:text-slate-100" />
           )}
         </button>
       </div>
 
-      {/* Mobile Dropdown */}
-      {menuOpen && (
-        <div
-          className={`md:hidden animate-slide-in border-t ${
-            isDark
-              ? "bg-slate-900/95 border-slate-700 text-slate-100"
-              : "bg-white/95 border-slate-200 text-slate-800"
-          }`}
-        >
-          <nav className="flex flex-col text-center space-y-2 py-6 px-4">
-            {menuItems.map((item) => (
+      {/* Mobile Menu Overlay */}
+      <AnimatePresence>
+        {open && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-slate-900/95 backdrop-blur-md flex flex-col items-center justify-center space-y-6 text-lg z-40 md:hidden"
+          >
+            {navLinks.map(({ href, label }) => (
               <Link
-                key={item.href}
-                href={item.href}
-                className={`py-2 text-lg rounded-full font-medium transition-all ${
-                  isDark
-                    ? "hover:bg-slate-800 hover:text-blue-400"
-                    : "hover:bg-blue-50 hover:text-blue-700"
-                }`}
-                onClick={() => setMenuOpen(false)}
+                key={href}
+                href={href}
+                className="text-white text-xl font-medium hover:text-blue-400 transition"
+                onClick={() => setOpen(false)}
               >
-                {item.label}
+                {label}
               </Link>
             ))}
-          </nav>
-        </div>
-      )}
+            <button
+              onClick={() => setOpen(false)}
+              className="btn-secondary mt-8 text-white border-white hover:bg-white hover:text-slate-900"
+            >
+              Close Menu
+            </button>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </header>
   );
 }

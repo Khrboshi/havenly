@@ -35,6 +35,9 @@ export default function Header() {
           <Link href="/premium" className="hover:text-blue-600 transition">
             Premium
           </Link>
+          <Link href="/about" className="hover:text-blue-600 transition">
+            About
+          </Link>
           <Link href="/privacy" className="hover:text-blue-600 transition">
             Privacy
           </Link>

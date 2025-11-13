@@ -1,4 +1,5 @@
 "use client";
+
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -25,7 +26,7 @@ export default function OnboardingFlow({ onFinish }) {
   const [index, setIndex] = useState(0);
 
   useEffect(() => {
-    // Prevent background scroll while onboarding
+    // Disable background scroll while onboarding is active
     document.body.style.overflow = "hidden";
     return () => (document.body.style.overflow = "auto");
   }, []);
@@ -42,18 +43,49 @@ export default function OnboardingFlow({ onFinish }) {
     <AnimatePresence>
       <motion.div
         key="overlay"
-        className="fixed inset-0 z-50 flex items-center justify-center bg-gradient-to-br from-blue-50 via-slate-100 to-blue-100 dark:from-slate-900 dark:via-slate-800 dark:to-blue-900 p-6"
+        className="fixed inset-0 z-50 flex items-center justify-center overflow-hidden"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
       >
+        {/* --- Ambient Animated Background --- */}
+        <div className="absolute inset-0 overflow-hidden">
+          <motion.div
+            className="absolute -top-1/2 left-1/2 w-[120vw] h-[120vh] rounded-full bg-gradient-to-br from-blue-300 via-indigo-200 to-sky-300 dark:from-blue-800 dark:via-indigo-900 dark:to-slate-900 blur-[120px] opacity-40"
+            animate={{
+              scale: [1, 1.05, 1],
+              x: ["-10%", "10%", "-10%"],
+              y: ["0%", "5%", "0%"],
+            }}
+            transition={{
+              duration: 12,
+              repeat: Infinity,
+              ease: "easeInOut",
+            }}
+          />
+          <motion.div
+            className="absolute top-1/3 right-1/3 w-[100vw] h-[100vh] rounded-full bg-gradient-to-tl from-blue-400 via-sky-200 to-indigo-300 dark:from-indigo-700 dark:via-blue-800 dark:to-slate-900 blur-[100px] opacity-40"
+            animate={{
+              scale: [1, 1.08, 1],
+              x: ["10%", "-10%", "10%"],
+              y: ["5%", "0%", "5%"],
+            }}
+            transition={{
+              duration: 14,
+              repeat: Infinity,
+              ease: "easeInOut",
+            }}
+          />
+        </div>
+
+        {/* --- Onboarding Card --- */}
         <motion.div
           key={index}
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -30 }}
           transition={{ duration: 0.5, ease: [0.43, 0.13, 0.23, 0.96] }}
-          className="max-w-md w-full bg-white/80 dark:bg-slate-800/80 backdrop-blur-lg border border-slate-200 dark:border-slate-700 rounded-2xl shadow-xl p-8 text-center"
+          className="relative z-10 max-w-md w-[90%] bg-white/80 dark:bg-slate-800/80 backdrop-blur-lg border border-slate-200 dark:border-slate-700 rounded-2xl shadow-xl p-8 text-center"
         >
           <h2 className="text-3xl font-semibold mb-4 text-slate-800 dark:text-slate-100">
             {slides[index].title}
@@ -77,7 +109,7 @@ export default function OnboardingFlow({ onFinish }) {
 
           <button
             onClick={next}
-            className="btn-primary w-full py-3 text-lg"
+            className="btn-primary w-full py-3 text-lg scale-tap"
           >
             {index === slides.length - 1 ? "Start Exploring" : "Next"}
           </button>
